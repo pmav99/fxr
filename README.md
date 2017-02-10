@@ -17,7 +17,7 @@ There are two main reasons that made me write this:
 * `sed` regex engine is quite limited. E.g. there is no support for look-aheads and other more
 advanced features.
 
-* The API for combining `ag`, `sed` and xargs is clunky at best.
+* The API for combining `ag`, `sed` and `xargs` is clunky at best.
 
 ## Performance
 
