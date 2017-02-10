@@ -8,7 +8,7 @@ ag <regex> -l <search_args> | xargs sed -i 's/<regex>/<replace>/g'
 
 ## Requirements
 
-You need python 2.7+ and a search program like `[ag](https://github.com/ggreer/the_silver_searcher)`.
+You need python 2.7+ and a search program like [`ag`](https://github.com/ggreer/the_silver_searcher).
 
 ## Rationale
 
