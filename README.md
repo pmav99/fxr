@@ -26,13 +26,13 @@ argument.
 ### Search for files matching pattern and replace all matches.
 
 ```
-python3 sr.py multi 'search_pattern' 'replace' -s -l --hidden
+./sr.py multi 'search_pattern' 'replace' -s -l --hidden
 ```
 
 ### Search for pattern on a single file and replace it with pattern.
 
 ```
-python3 sr.py single 'search_pattern' 'replace' /path/to/file
+./sr.py single 'search_pattern' 'replace' /path/to/file
 ```
 
 ## Performance
