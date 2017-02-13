@@ -73,10 +73,6 @@ def main(args):
     replace = args.replace
     if debug:
         print(args)
-        print("Regex  : %s" % regex)
-        print("Regex  : %s" % re.compile(regex))
-        print("Replace: %s" % replace)
-        print("Replace: %s" % re.compile(replace))
     if args.mode == "single":
         filepaths = [args.filepath]     # create a list!
         raise_on_error = True
