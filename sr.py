@@ -65,24 +65,13 @@ def search_for_files(search_prog, search_args, pattern):
 
 
 def main(args):
-    debug = args.debug
-    pattern = re.escape(args.pattern) if args.literal else args.pattern
-    replacement = args.replacement
-    if debug:
+    if args.debug:
         print(args)
-    if args.mode == "single":
-        filepaths = [args.filepath]     # create a list!
-        raise_on_error = True
-    elif args.mode == 'multi':
-        # use ag to search for the pattern.
-        search_prog = args.search
-        search_args = args.search_args
-        filepaths = search_for_files(search_prog, search_args, pattern)
-        raise_on_error = False
-    else:
-        raise ValueError("WTF?!?!?")
+    pattern = re.escape(args.pattern) if args.literal else args.pattern
+    filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, pattern)
+    raise_on_error = (len(filepaths) == 1)
     for filepath in filepaths:
-        apply_search_and_replace(pattern, replacement, filepath, raise_on_error)
+        apply_search_and_replace(pattern, args.replacement, filepath, raise_on_error)
 
 
 if __name__ == "__main__":
