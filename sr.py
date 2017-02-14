@@ -22,26 +22,25 @@ import argparse
 import subprocess
 
 
-def apply_search_and_replace(pattern, replacement, filepaths, raise_on_error=False):
-    for filepath in filepaths:
-        # open file
-        with open(filepath) as fd:
-            original = fd.read()
-        # replace text
-        try:
-            substituted = re.sub(pattern, replacement, original)
-        except Exception:
-            sys.exit("The regex pattern is invalid: %r" % pattern)
-        if original == substituted:
-            msg = "no substitutions made: %s" % filepath
-            if raise_on_error:
-                sys.exit(msg)
-            else:
-                print("Warning: %s" % msg)
+def apply_search_and_replace(pattern, replacement, filepath, raise_on_error=False):
+    # open file
+    with open(filepath) as fd:
+        original = fd.read()
+    # replace text
+    try:
+        substituted = re.sub(pattern, replacement, original)
+    except Exception:
+        sys.exit("The regex pattern is invalid: %r" % pattern)
+    if original == substituted:
+        msg = "no substitutions made: %s" % filepath
+        if raise_on_error:
+            sys.exit(msg)
         else:
-            # write file inplace
-            with open(filepath, "w") as fd:
-                fd.write(substituted)
+            print("Warning: %s" % msg)
+    else:
+        # write file inplace
+        with open(filepath, "w") as fd:
+            fd.write(substituted)
 
 
 def search_for_files(search_prog, search_args, pattern):
@@ -84,7 +83,8 @@ def main(args):
         raise_on_error = False
     else:
         raise ValueError("WTF?!?!?")
-    apply_search_and_replace(pattern, replacement, filepaths, raise_on_error)
+    for filepath in filepaths:
+        apply_search_and_replace(pattern, replacement, filepath, raise_on_error)
 
 
 if __name__ == "__main__":
