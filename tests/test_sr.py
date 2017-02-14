@@ -41,3 +41,8 @@ def test_sr_single(temp_file, pattern, replacement, content, no_substitutions):
     assert pattern not in substituted
     assert replacement in substituted
     assert len(substituted.split(replacement)) == no_substitutions + 1
+
+
+def test_sr_single_no_matches(temp_file):
+    with pytest.raises(subprocess.CalledProcessError):
+        run_single("pattern", "replacement", temp_file)
