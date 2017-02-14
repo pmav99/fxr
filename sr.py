@@ -47,14 +47,12 @@ def search_for_files(search_prog, search_args, pattern):
     # Check if the search engine is available
     if shutil.which(search_prog) is None:
         sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
-
     # We DO need "-l" when we use ag!
     if search_prog == "ag":
         if search_args and "-l" not in search_args:
             search_args.append("-l")
         else:
             search_args = ['-l']
-
     cmd = [search_prog]
     cmd.extend(search_args)
     cmd.append(pattern)
