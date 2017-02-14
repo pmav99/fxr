@@ -19,6 +19,12 @@ def temp_file(tmpdir):
     return sample_file
 
 
+def run_single(pattern, replacement, filepath):
+    cmd = "python3 sr.py single '{pattern}' '{replacement}' {filepath} "
+    cmd = shlex.split(cmd.format(pattern=pattern, replacement=replacement, filepath=filepath))
+    subprocess.check_call(cmd)
+
+
 @pytest.mark.parametrize("pattern, replacement, content", [
     (" \d{3} ", "ASD", "substitute number: 123 is this ok? asdf123qwer"),
     (" 123 ", "ASD", "substitute number: 123 is this ok? asdf123qwer"),
@@ -28,9 +34,7 @@ def test_sr_single(temp_file, pattern, replacement, content):
     original = temp_file.read()
     assert replacement not in original
     # run script
-    cmd = "python3 sr.py single '{pattern}' '{replacement}' {filepath} "
-    cmd = shlex.split(cmd.format(pattern=pattern, replacement=replacement, filepath=temp_file))
-    subprocess.check_call(cmd)
+    run_single(pattern=pattern, replacement=replacement, filepath=temp_file)
     substituted = temp_file.read()
     # check that substitutions are OK
     assert "123" in substituted
