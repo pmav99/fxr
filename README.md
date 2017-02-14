@@ -1,5 +1,7 @@
 # Python search and replace.
 
+[![Build Status](https://travis-ci.org/pmav99/search-and-replace.svg?branch=master)](https://travis-ci.org/pmav99/search-and-replace)
+
 The `sr.py` script is practically a pure python equivalent to:
 
 ```
