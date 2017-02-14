@@ -65,8 +65,6 @@ def search_for_files(search_prog, search_args, pattern):
 
 
 def main(args):
-    if args.debug:
-        print(args)
     pattern = re.escape(args.pattern) if args.literal else args.pattern
     filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, pattern)
     raise_on_error = (len(filepaths) == 1)
@@ -75,24 +73,24 @@ def main(args):
 
 
 if __name__ == "__main__":
-    # create the top-level parser and the sub-parser
-    parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
-
-    subparsers = parser.add_subparsers(help='Choose mode of operation', dest='mode')
-    single_parser = subparsers.add_parser('single', help='"Search & replace" on a single file')
-    multi_parser = subparsers.add_parser('multi', help='Search for files matching pattern and replace all occurrences.')
+    # create the top-level parser
+    main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
+    # Create the parent-parser which contains the common options among the subparsers.
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument("pattern", help="The regex pattern we want to match.")
+    parent_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
+    parent_parser.add_argument("--debug", action="store_true", default=False, help="Debug mode on")
+    parent_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex).")
+    # Create the sub-parsers.
+    subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands", description="Valid subcommands")
+    single_parser = subparsers.add_parser('single', help='"Search & replace" on a single file', parents=[parent_parser])
+    multi_parser = subparsers.add_parser('multi', help='Search for files matching pattern and replace all occurrences.', parents=[parent_parser], add_help=True)
     # single parser arguments
-    single_parser.add_argument("pattern", help="The regex pattern we want to match.")
-    single_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
     single_parser.add_argument("filepath", help="The path to the file on which we want to replace text.")
-    single_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex.")
-    single_parser.add_argument("-d", "--debug", action="store_true", default=False, help="Debug mode on")
     # multi parser arguments
-    multi_parser.add_argument("pattern", help="The regex pattern we want to match.")
-    multi_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
-    multi_parser.add_argument("search_args", help="Any additional arguments are passed to the search executable.", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
-    multi_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex.")
-    multi_parser.add_argument("-s", "--search", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
-    multi_parser.add_argument("-d", "--debug", action="store_true", default=False, help="Debug mode on")
-    args = parser.parse_args()
+    multi_parser.add_argument("search_args", help="Any additional arguments are passed to the search executable (i.e. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
+    multi_parser.add_argument("--search", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
+    args = main_parser.parse_args()
+    if args.debug:
+        print(args)
     main(args)
