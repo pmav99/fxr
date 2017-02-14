@@ -22,15 +22,21 @@ import argparse
 import subprocess
 
 
-def apply_search_and_replace(pattern, replacement, filepath, raise_on_error=False):
+def literal_replace(pattern, replacement, original):
+    return original.replace(pattern, replacement)
+
+
+def regex_replace(pattern, replacement, original):
+    return re.sub(pattern, replacement, original)
+
+
+def apply_search_and_replace(pattern, replacement, filepath, literal, raise_on_error=False):
     # open file
     with open(filepath) as fd:
         original = fd.read()
     # replace text
-    try:
-        substituted = re.sub(pattern, replacement, original)
-    except Exception:
-        sys.exit("The regex pattern is invalid: %r" % pattern)
+    replace_method = literal_replace if literal else regex_replace
+    substituted = replace_method(pattern, replacement, original)
     if original == substituted:
         msg = "no substitutions made: %s" % filepath
         if raise_on_error:
@@ -65,11 +71,10 @@ def search_for_files(search_prog, search_args, pattern):
 
 
 def main(args):
-    pattern = re.escape(args.pattern) if args.literal else args.pattern
-    filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, pattern)
+    filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
     raise_on_error = (len(filepaths) == 1)
     for filepath in filepaths:
-        apply_search_and_replace(pattern, args.replacement, filepath, raise_on_error)
+        apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
 if __name__ == "__main__":
