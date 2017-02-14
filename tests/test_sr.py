@@ -32,7 +32,7 @@ def run_single(pattern, replacement, filepath, literal=False):
     (False, r"\d{3}", "ASD", "substitute number: 123 is this ok? asdf123qwer", 2),
     (False, " 123 ", "ASD", "substitute number: 123 is this ok? asdf123qwer", 1),
     (False, "123", "ASD", "substitute number: 123 is this ok? asdf123qwer", 2),
-    #
+    # Regex with literal
     (True, r"\d{3}", "ASD", r"Just text 123 more text: \d{3} asdf123qwer final text", 1),
     (True, " 123 ", "ASD", r"Just text 123 more text: \d{3} asdf123qwer final text", 1),
     (True, "123", "ASD", r"Just text 123 more text: \d{3} asdf123qwer final text", 2),
@@ -43,8 +43,8 @@ def test_sr_single(temp_file, literal, pattern, replacement, content, no_substit
     assert replacement not in original
     # run script
     run_single(pattern=pattern, replacement=replacement, filepath=temp_file, literal=literal)
-    substituted = temp_file.read()
     # check that substitutions are OK
+    substituted = temp_file.read()
     assert pattern not in substituted
     assert replacement in substituted
     assert len(substituted.split(replacement)) == no_substitutions + 1
@@ -53,7 +53,13 @@ def test_sr_single(temp_file, literal, pattern, replacement, content, no_substit
 @pytest.mark.parametrize("literal", [True, False])
 def test_sr_single_no_matches(temp_file, literal):
     with pytest.raises(subprocess.CalledProcessError):
-        run_single(literal, "pattern", "replacement", temp_file)
+        run_single("pattern", "replacement", temp_file, literal)
+
+
+def test_sr_regex_pattern_not_valid(temp_file):
+    temp_file.write("asd( asdf")
+    with pytest.raises(subprocess.CalledProcessError):
+        run_single("asd(", "replacement", temp_file)
 
 
 #@pytest.mark.parametrize("pattern, replacement, content", [
