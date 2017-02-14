@@ -25,11 +25,12 @@ def run_single(pattern, replacement, filepath):
     subprocess.check_call(cmd)
 
 
-@pytest.mark.parametrize("pattern, replacement, content", [
-    (" \d{3} ", "ASD", "substitute number: 123 is this ok? asdf123qwer"),
-    (" 123 ", "ASD", "substitute number: 123 is this ok? asdf123qwer"),
+@pytest.mark.parametrize("pattern, replacement, content, no_substitutions", [
+    (r"\d{3}", "ASD", "substitute number: 123 is this ok? asdf123qwer", 2),
+    (" 123 ", "ASD", "substitute number: 123 is this ok? asdf123qwer", 1),
+    ("123",   "ASD", "substitute number: 123 is this ok? asdf123qwer", 2),
 ])
-def test_sr_single(temp_file, pattern, replacement, content):
+def test_sr_single(temp_file, pattern, replacement, content, no_substitutions):
     temp_file.write(content)
     original = temp_file.read()
     assert replacement not in original
@@ -37,6 +38,6 @@ def test_sr_single(temp_file, pattern, replacement, content):
     run_single(pattern=pattern, replacement=replacement, filepath=temp_file)
     substituted = temp_file.read()
     # check that substitutions are OK
-    assert "123" in substituted
-    assert " 123 " not in substituted
+    assert pattern not in substituted
     assert replacement in substituted
+    assert len(substituted.split(replacement)) == no_substitutions + 1
