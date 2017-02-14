@@ -66,7 +66,7 @@ def search_for_files(search_prog, search_args, pattern):
 
 def main(args):
     debug = args.debug
-    pattern = args.pattern
+    pattern = re.escape(args.pattern) if args.literal else args.pattern
     replacement = args.replacement
     if debug:
         print(args)
@@ -96,11 +96,13 @@ if __name__ == "__main__":
     single_parser.add_argument("pattern", help="The regex pattern we want to match.")
     single_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
     single_parser.add_argument("filepath", help="The path to the file on which we want to replace text.")
+    single_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex.")
     single_parser.add_argument("-d", "--debug", action="store_true", default=False, help="Debug mode on")
     # multi parser arguments
     multi_parser.add_argument("pattern", help="The regex pattern we want to match.")
     multi_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
     multi_parser.add_argument("search_args", help="Any additional arguments are passed to the search executable.", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
+    multi_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex.")
     multi_parser.add_argument("-s", "--search", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
     multi_parser.add_argument("-d", "--debug", action="store_true", default=False, help="Debug mode on")
     args = parser.parse_args()
