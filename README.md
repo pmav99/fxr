@@ -1,4 +1,4 @@
-# Python search and replace.
+# Python Find and Replace.
 
 [![Build Status](https://travis-ci.org/pmav99/search-and-replace.svg?branch=master)](https://travis-ci.org/pmav99/search-and-replace)
 
