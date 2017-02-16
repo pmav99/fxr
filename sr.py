@@ -94,7 +94,7 @@ if __name__ == "__main__":
     single_parser.add_argument("filepath", help="The path to the file on which we want to replace text.")
     # multi parser arguments
     multi_parser.add_argument("search_args", help="Any additional arguments are passed to the search executable (i.e. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
-    multi_parser.add_argument("--search", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
+    multi_parser.add_argument("--search-prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
     args = main_parser.parse_args()
     if args.debug:
         print(args)
