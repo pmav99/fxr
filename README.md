@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/pmav99/search-and-replace.svg?branch=master)](https://travis-ci.org/pmav99/search-and-replace)
 
-The `sr.py` script is practically a pure python equivalent to:
+The `frx` script is practically a pure python equivalent to:
 
 ```
 ag <pattern> -l <search_args> | xargs sed -i 's/<pattern>/<replacement>/g'
@@ -29,21 +29,30 @@ You need Python `2.7+/3.3+` and a search program like
 ### Search for files matching pattern and replace all matches.
 
 ```
-./sr.py multi 'pattern' 'replacement' -s -l --hidden
+./frx multi 'pattern' 'replacement' -s -l --hidden
 ```
 
 ### Search for pattern on a single file and replace it with pattern.
 
 ```
-./sr.py single 'pattern' 'replacement' /path/to/file
+./frx single 'pattern' 'replacement' /path/to/file
+```
+
+### Strings containing both single and double quotes:
+
+Some care is being required. You will probably want to enclose the string into `'` and then escape
+`'` in the string. E.g.
+
+```
+'Multiple '\''single quoted\'\\ and "double quoted" phrase.'
 ```
 
 ### Literal matches
 
-Some care is needed when you use `--literal` since newlines etc might be messed up by your shell:
+Some care is needed when you use `--literal` since e.g. newlines etc might be messed up by your shell:
 
 ```
-python sr.py single --literal $'Multiple lines will\nbe converted to single lines\n' $'Only single lines here\n' sample.txt
+python frx single --literal $'Multiple lines will\nbe converted to single lines\n' $'Only single lines here\n' sample.txt
 ```
 
 

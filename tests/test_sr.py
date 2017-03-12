@@ -21,7 +21,7 @@ def temp_file(tmpdir):
 
 def run_single(pattern, replacement, filepath, literal=False):
     literal = '--literal' if literal else ''
-    cmd = "python3 sr.py single {literal} '{pattern}' '{replacement}' {filepath} "
+    cmd = "python3 frx single {literal} '{pattern}' '{replacement}' {filepath} "
     cmd = shlex.split(cmd.format(
         literal=literal, pattern=pattern, replacement=replacement, filepath=filepath
     ))
@@ -61,6 +61,16 @@ def test_sr_regex_pattern_not_valid(temp_file):
     with pytest.raises(subprocess.CalledProcessError):
         run_single("asd(", "replacement", temp_file)
 
+# def test_sr_literal_pattern_not_valid(temp_file):
+    # temp_file.write("asd( asdf")
+    # run_single("asd(", "replacement", temp_file, literal=True)
+    # # check that substitutions are OK
+    # substituted = temp_file.read()
+    # assert pattern not in substituted
+    # assert replacement in substituted
+    # assert len(substituted.split(replacement)) == no_substitutions + 1
+
+
 
 #@pytest.mark.parametrize("pattern, replacement, content", [
     # (" \d{3} ", "ASD", "substitute number: 123 asdf \d{3} is this ok? asdf123qwer"),
@@ -71,7 +81,7 @@ def test_sr_regex_pattern_not_valid(temp_file):
     # original = temp_file.read()
     # assert replacement not in original
     # # run script
-    # cmd = "python3 sr.py single '{pattern}' '{replacement}' {filepath} "
+    # cmd = "python3 frx single '{pattern}' '{replacement}' {filepath} "
     # cmd = shlex.split(cmd.format(pattern=pattern, replacement=replacement, filepath=temp_file))
     # subprocess.check_call(cmd)
     # substituted = temp_file.read()
