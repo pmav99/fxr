@@ -1,6 +1,6 @@
 # Python Find and Replace.
 
-[![Build Status](https://travis-ci.org/pmav99/search-and-replace.svg?branch=master)](https://travis-ci.org/pmav99/search-and-replace)
+[![Build Status](https://travis-ci.org/pmav99/frx.svg?branch=master)](https://travis-ci.org/pmav99/frx)
 
 The `frx` script is practically a pure python equivalent to:
 
