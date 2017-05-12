@@ -35,7 +35,7 @@ class TestFXR(object):
     def run_add_cli(self, filepath, pattern, added_text, prepend=False, literal=False, **kwargs):
         literal = '--literal' if literal else ''
         prepend = "--prepend" if prepend else ''
-        cmd = "python fxr add {literal} {prepend} --single {filepath} '{pattern}' '{added_text}'"
+        cmd = "fxr add {literal} {prepend} --single {filepath} '{pattern}' '{added_text}'"
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 

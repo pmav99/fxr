@@ -191,7 +191,7 @@ def main(args):
         run(args, filepath)
 
 
-if __name__ == "__main__":
+def cli():
     # create the top-level parser
     main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
     # Create the parent-parser which contains the common options among the subparsers.
@@ -236,5 +236,8 @@ if __name__ == "__main__":
     args = main_parser.parse_args()
     # if args.debug:
         # print(args)
-    print(args)
-    main(args)
+    if args.mode:
+        main(args)
+    else:
+        main_parser.print_help()
+        sys.exit(0)
