@@ -78,3 +78,13 @@ class TestFXRAdd(TestFXR):
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["exceptions"])
     def test_add_exceptions(self, temp_file, testdata):
         self._test_exception(temp_file, testdata)
+
+
+class TestFXRReplace(TestFXR):
+
+    def run_code(self, filepath, testdata):
+        return fxr.replace_text(args=testdata, filepath=filepath, raise_on_error=True)
+
+    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["replace"]["exceptions"])
+    def test_add_exceptions(self, temp_file, testdata):
+        self._test_exception(temp_file, testdata)

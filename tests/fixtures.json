@@ -87,7 +87,35 @@
     },
     "replace": {
       "valid": [],
-      "exceptions": []
+      "exceptions": [
+        {
+          "description": "Empty pattern",
+          "literal": true,
+          "pattern": "",
+          "replacement": "ASDF",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "In <replace> mode, you must specify both <pattern> and <replacement>."
+        },
+        {
+          "description": "Empty added_text",
+          "literal": true,
+          "pattern": "pattern",
+          "replacement": "",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "In <replace> mode, you must specify both <pattern> and <replacement>."
+        },
+        {
+          "description": "No match",
+          "literal": true,
+          "pattern": "pattern",
+          "replacement": "added",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "Couldn't find a match."
+        }
+      ]
     }
   }
 }
