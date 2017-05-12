@@ -39,13 +39,20 @@ class TestFXR(object):
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 
-    def run_prog(self, filepath, testdata):
+    def run_code(self, filepath, testdata):
         return fxr.add_text(args=testdata, filepath=filepath, raise_on_error=True)
 
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
-    def test_add_valid(self, temp_file, testdata):
+    def test_add_valid_cli(self, temp_file, testdata):
         temp_file.write(testdata["original"])
         self.run_cli(temp_file, **testdata)
+        assert temp_file.read() == testdata["expected"]
+
+    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
+    def test_add_valid_code(self, temp_file, testdata):
+        testdata = Munch(**testdata)
+        temp_file.write(testdata["original"])
+        self.run_code(temp_file, testdata)
         assert temp_file.read() == testdata["expected"]
 
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["exceptions"])
@@ -53,7 +60,7 @@ class TestFXR(object):
         testdata = Munch(**testdata)
         temp_file.write(testdata["original"])
         with pytest.raises(SystemExit) as exc:
-            self.run_prog(temp_file, testdata)
+            self.run_code(temp_file, testdata)
             # fxr.add_text(args=testdata, filepath=temp_file, raise_on_error=True)
         assert exc.typename == testdata["exception_type"]
         assert str(exc.value) == testdata["exception_text"]
