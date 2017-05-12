@@ -27,6 +27,24 @@ import io
 import os
 
 
+def get_last_line(filepath):
+    if not os.stat(filepath).st_size:
+        # No reason to open empty files
+        last = b''
+    else:
+        with open(filepath, "rb") as fd:
+            fd.readline()      # Read the first line.
+            fd.seek(-2, 2)             # Jump to the second last byte.
+            while fd.read(1) != b"\n": # Until EOL is found...
+                try:
+                    fd.seek(-2, 1)         # ...jump back the read byte plus one more.
+                except IOError:
+                    # the file has just a single line!
+                    fd.seek(0)
+                    break
+            last = fd.readline()       # Read last line.
+    return last.decode('utf-8')
+
 
 @contextmanager
 def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
@@ -160,10 +178,13 @@ def add_text(args, filepath, raise_on_error=True, **kwargs):
     prepend = args.prepend
     pattern = re.compile(args.pattern)
     found = False
+    last_line = get_last_line(filepath)
     with inplace(filepath, "r") as (infile, outfile):
         for line in infile:
             if pattern.search(line):
                 found = True
+                if not prepend and line == last_line:
+                    added_text = args.added_text
                 lines = [added_text, line] if prepend else [line, added_text]
                 outfile.writelines(lines)
             else:
