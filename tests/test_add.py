@@ -8,6 +8,7 @@
 """
 
 import re
+import abc
 import json
 import shlex
 import subprocess
@@ -31,6 +32,25 @@ def temp_file(tmpdir):
 
 
 class TestFXR(object):
+
+    @abc.abstractmethod
+    def run_cli(self, *args, **kwargs):
+        pass
+
+    @abc.abstractmethod
+    def run_code(self, *args, **kwargs):
+        pass
+
+    def _test_exception(self, temp_file, testdata):
+        testdata = Munch(**testdata)
+        temp_file.write(testdata["original"])
+        with pytest.raises(SystemExit) as exc:
+            self.run_code(temp_file, testdata)
+        assert exc.typename == testdata["exception_type"]
+        assert str(exc.value) == testdata["exception_text"]
+
+
+class TestFXRAdd(TestFXR):
 
     def run_cli(self, filepath, pattern, added_text, prepend=False, literal=False, **kwargs):
         literal = '--literal' if literal else ''
@@ -57,10 +77,4 @@ class TestFXR(object):
 
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["exceptions"])
     def test_add_exceptions(self, temp_file, testdata):
-        testdata = Munch(**testdata)
-        temp_file.write(testdata["original"])
-        with pytest.raises(SystemExit) as exc:
-            self.run_code(temp_file, testdata)
-            # fxr.add_text(args=testdata, filepath=temp_file, raise_on_error=True)
-        assert exc.typename == testdata["exception_type"]
-        assert str(exc.value) == testdata["exception_text"]
+        self._test_exception(temp_file, testdata)
