@@ -21,7 +21,7 @@ def temp_file(tmpdir):
 
 def run_single(pattern, replacement, filepath, literal=False):
     literal = '--literal' if literal else ''
-    cmd = "python3 frx single {literal} '{pattern}' '{replacement}' {filepath} "
+    cmd = "python3 fxr single {literal} '{pattern}' '{replacement}' {filepath} "
     cmd = shlex.split(cmd.format(
         literal=literal, pattern=pattern, replacement=replacement, filepath=filepath
     ))
@@ -81,7 +81,7 @@ def test_sr_regex_pattern_not_valid(temp_file):
     # original = temp_file.read()
     # assert replacement not in original
     # # run script
-    # cmd = "python3 frx single '{pattern}' '{replacement}' {filepath} "
+    # cmd = "python3 fxr single '{pattern}' '{replacement}' {filepath} "
     # cmd = shlex.split(cmd.format(pattern=pattern, replacement=replacement, filepath=temp_file))
     # subprocess.check_call(cmd)
     # substituted = temp_file.read()

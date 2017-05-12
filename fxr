@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# module: frx
+# module: fxr
 # author: Panagiotis Mavrogiorgos - pmav99 google mail
 
 """
 
-    python3 frx single 'search_pattern' 'replace' /path/to/file
+    python3 fxr single 'search_pattern' 'replace' /path/to/file
 
-    python3 frx multi 'search_pattern' 'replace' -s -l --hidden
+    python3 fxr multi 'search_pattern' 'replace' -s -l --hidden
 
 """
 

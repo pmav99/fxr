@@ -1,8 +1,8 @@
 # Python Find and Replace.
 
-[![Build Status](https://travis-ci.org/pmav99/frx.svg?branch=master)](https://travis-ci.org/pmav99/frx)
+[![Build Status](https://travis-ci.org/pmav99/fxr.svg?branch=master)](https://travis-ci.org/pmav99/fxr)
 
-The `frx` script is practically a pure python equivalent to:
+The `fxr` script is practically a pure python equivalent to:
 
 ```
 ag <pattern> -l <search_args> | xargs sed -i 's/<pattern>/<replacement>/g'
@@ -29,13 +29,13 @@ You need Python `2.7+/3.3+` and a search program like
 ### Search for files matching pattern and replace all matches.
 
 ```
-./frx multi 'pattern' 'replacement' -s -l --hidden
+./fxr multi 'pattern' 'replacement' -s -l --hidden
 ```
 
 ### Search for pattern on a single file and replace it with pattern.
 
 ```
-./frx single 'pattern' 'replacement' /path/to/file
+./fxr single 'pattern' 'replacement' /path/to/file
 ```
 
 ### Strings containing both single and double quotes:
@@ -52,7 +52,7 @@ Some care is being required. You will probably want to enclose the string into `
 Some care is needed when you use `--literal` since e.g. newlines etc might be messed up by your shell:
 
 ```
-python frx single --literal $'Multiple lines will\nbe converted to single lines\n' $'Only single lines here\n' sample.txt
+python fxr single --literal $'Multiple lines will\nbe converted to single lines\n' $'Only single lines here\n' sample.txt
 ```
 
 
