@@ -152,21 +152,29 @@ def main(args):
         apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
-def add_text(args, filepath):
+def add_text(args, filepath, raise_on_error=True, **kwargs):
     # input validation
     if args.pattern == '' or args.added_text == '':
         sys.exit("In <add> mode, you must specify both <pattern> and <added_text>.")
     added_text = args.added_text + "\n"
     prepend = args.prepend
     pattern = re.compile(args.pattern)
+    found = False
     with inplace(filepath, "r") as (infile, outfile):
         for line in infile:
             if pattern.search(line):
+                found = True
                 lines = [added_text, line] if prepend else [line, added_text]
                 outfile.write(lines[0])
                 outfile.write(lines[1])
             else:
                 outfile.write(line)
+    if not found:
+        msg = "Couldn't find a match."
+        if raise_on_error:
+            raise sys.exit(msg)
+        else:
+            print(msg)
 
 
 DISPATCHER = {

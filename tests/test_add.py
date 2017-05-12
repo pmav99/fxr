@@ -50,7 +50,7 @@ class TestFRX(object):
         testdata = Munch(**testdata)
         temp_file.write(testdata["original"])
         with pytest.raises(SystemExit) as exc:
-            frx.add_text(testdata, temp_file)
+            frx.add_text(args=testdata, filepath=temp_file, raise_on_error=True)
         assert exc.typename == testdata["exception_type"]
         assert str(exc.value) == testdata["exception_text"]
 

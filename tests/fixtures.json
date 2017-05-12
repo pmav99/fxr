@@ -69,6 +69,15 @@
           "original": "just some text",
           "exception_type": "SystemExit",
           "exception_text": "In <add> mode, you must specify both <pattern> and <added_text>."
+        },
+        {
+          "description": "No match",
+          "pattern": "pattern",
+          "prepend": true,
+          "added_text": "added",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "Couldn't find a match."
         }
       ]
     },
