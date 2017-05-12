@@ -170,7 +170,7 @@ def main(args):
         apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
-def add_text(args, filepath, raise_on_error=True, **kwargs):
+def add_text(args, filepath, raise_on_error=True):
     # input validation
     if args.pattern == '' or args.added_text == '':
         sys.exit("In <add> mode, you must specify both <pattern> and <added_text>.")
