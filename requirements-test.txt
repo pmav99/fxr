@@ -1,2 +1,3 @@
 pytest
 munch
+https://github.com/pmav99/fxr
