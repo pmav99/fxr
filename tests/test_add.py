@@ -39,7 +39,7 @@ class TestFXR(object):
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 
-    def run_prog(self, testdata, filepath):
+    def run_prog(self, filepath, testdata):
         return fxr.add_text(args=testdata, filepath=filepath, raise_on_error=True)
 
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
@@ -53,7 +53,7 @@ class TestFXR(object):
         testdata = Munch(**testdata)
         temp_file.write(testdata["original"])
         with pytest.raises(SystemExit) as exc:
-            self.run_prog(testdata, temp_file)
+            self.run_prog(temp_file, testdata)
             # fxr.add_text(args=testdata, filepath=temp_file, raise_on_error=True)
         assert exc.typename == testdata["exception_type"]
         assert str(exc.value) == testdata["exception_text"]
