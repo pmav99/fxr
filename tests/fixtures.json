@@ -1,0 +1,85 @@
+{
+  "tests": {
+    "add": {
+      "valid": [
+        {
+          "description": "Append at the start of the file",
+          "pattern": "First",
+          "prepend": false,
+          "added_text": "NEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "First Line A\nNEW LINE\nSecond Line B\nThird Line C"
+        },
+        {
+          "description": "Prepend at the start of the file",
+          "pattern": "First",
+          "prepend": true,
+          "added_text": "NEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "NEW LINE\nFirst Line A\nSecond Line B\nThird Line C"
+        },
+        {
+          "description": "Append at the middle of the file",
+          "pattern": "Second",
+          "prepend": false,
+          "added_text": "NEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "First Line A\nSecond Line B\nNEW LINE\nThird Line C"
+        },
+        {
+          "description": "Prepend at the middle of the file",
+          "pattern": "Second",
+          "prepend": true,
+          "added_text": "NEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "First Line A\nNEW LINE\nSecond Line B\nThird Line C"
+        },
+        {
+          "description": "Append at the end of the file; You need to add a new line!",
+          "pattern": "Third",
+          "prepend": false,
+          "added_text": "\nNEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "First Line A\nSecond Line B\nThird Line C\nNEW LINE"
+        },
+        {
+          "description": "Prepend at the end of the file",
+          "pattern": "Third",
+          "prepend": true,
+          "added_text": "NEW LINE",
+          "original": "First Line A\nSecond Line B\nThird Line C",
+          "expected": "First Line A\nSecond Line B\nNEW LINE\nThird Line C"
+        }
+      ],
+      "exceptions": [
+        {
+          "description": "Empty pattern",
+          "pattern": "",
+          "prepend": true,
+          "added_text": "ASDF",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "In <add> mode, you must specify both <pattern> and <added_text>."
+        },
+        {
+          "description": "Empty added_text",
+          "pattern": "pattern",
+          "prepend": true,
+          "added_text": "",
+          "original": "just some text",
+          "exception_type": "SystemExit",
+          "exception_text": "In <add> mode, you must specify both <pattern> and <added_text>."
+        }
+      ]
+    },
+    "delete": {
+      "valid": [],
+      "exceptions": []
+    },
+    "replace": {
+      "valid": [],
+      "exceptions": []
+    }
+  }
+}
+
