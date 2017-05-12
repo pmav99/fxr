@@ -196,9 +196,32 @@ def add_text(args, filepath, raise_on_error=True):
         else:
             print(msg)
 
+def replace_text(args, filepath, raise_on_error=False):
+    # input validation
+    if args.pattern == '' or args.replacement == '':
+        sys.exit("In <replace> mode, you must specify both <pattern> and <replacement>.")
+    # open file
+    with open(filepath) as fd:
+        original = fd.read()
+    # replace text
+    replace_method = literal_replace if args.literal else regex_replace
+    substituted = replace_method(args.pattern, args.replacement, original)
+    if original == substituted:
+        msg = "Couldn't find a match."
+        if raise_on_error:
+            sys.exit(msg)
+        else:
+            print("Warning: %s" % msg)
+    else:
+        # write file inplace
+        with open(filepath, "w") as fd:
+            fd.write(substituted)
+
+
 
 DISPATCHER = {
     "add": add_text,
+    "replace": replace_text,
 }
 
 
