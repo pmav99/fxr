@@ -165,8 +165,7 @@ def add_text(args, filepath, raise_on_error=True, **kwargs):
             if pattern.search(line):
                 found = True
                 lines = [added_text, line] if prepend else [line, added_text]
-                outfile.write(lines[0])
-                outfile.write(lines[1])
+                outfile.writelines(lines)
             else:
                 outfile.write(line)
     if not found:
