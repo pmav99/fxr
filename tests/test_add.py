@@ -39,14 +39,11 @@ class TestFRX(object):
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 
-    # def run_add_prog(self, filepath, **kwargs):
-        # fxr.add_text(args=**
-
-    # @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
-    # def test_add_valid(self, temp_file, testdata):
-        # temp_file.write(testdata["original"])
-        # self.run_add_cli(temp_file, **testdata)
-        # assert temp_file.read() == testdata["expected"]
+    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
+    def test_add_valid(self, temp_file, testdata):
+        temp_file.write(testdata["original"])
+        self.run_add_cli(temp_file, **testdata)
+        assert temp_file.read() == testdata["expected"]
 
     @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["exceptions"])
     def test_add_exceptions(self, temp_file, testdata):
