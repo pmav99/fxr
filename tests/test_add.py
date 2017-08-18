@@ -7,56 +7,15 @@
 
 """
 
-import re
-import abc
-import json
 import shlex
 import subprocess
 
-import importlib
 import fxr
 
-from munch import Munch
 import pytest
 
+from . import TestFXR, load_fixtures
 
-
-def load_fixtures(path, key):
-    if key not in {"valid", "exceptions"}:
-        raise ValueError('<key> must be one of `{"valid", "exceptions"}`, not `%s`' % key)
-    with open(path) as fd:
-        fixtures = json.load(fd)[key]
-    return fixtures
-
-
-class TestFXR(object):
-
-    @abc.abstractmethod
-    def run_cli(self, args, filepath):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def run_code(self, args, filepath):
-        raise NotImplementedError
-
-    def _test_run_valid_cli(self, temp_file, args):
-        temp_file.write(args["original"])
-        self.run_cli(temp_file, **args)
-        assert temp_file.read() == args["expected"]
-
-    def _test_run_valid_code(self, temp_file, args):
-        args = Munch(**args)
-        temp_file.write(args["original"])
-        self.run_code(args=args, filepath=temp_file)
-        assert temp_file.read() == args["expected"]
-
-    def _test_run_exceptions(self, temp_file, args):
-        args = Munch(**args)
-        temp_file.write(args["original"])
-        with pytest.raises(SystemExit) as exc:
-            self.run_code(args=args, filepath=temp_file)
-        assert exc.typename == args["exception_type"]
-        assert str(exc.value) == args["exception_text"]
 
 class TestFXRAdd(TestFXR):
 
@@ -81,16 +40,3 @@ class TestFXRAdd(TestFXR):
     @pytest.mark.parametrize("args", load_fixtures("tests/add_fixtures.json", "exceptions"))
     def test_add_exceptions(self, temp_file, args):
         self._test_run_exceptions(temp_file, args)
-
-
-
-
-
-class TestFXRReplace(TestFXR):
-
-    def run_code(self, filepath, testdata):
-        return fxr.replace_text(args=testdata, filepath=filepath, raise_on_error=True)
-
-    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["replace"]["exceptions"])
-    def test_add_exceptions(self, temp_file, testdata):
-        self._test_exception(temp_file, testdata)
