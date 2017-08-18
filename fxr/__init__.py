@@ -115,6 +115,17 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
             pass
 
 
+@contextmanager
+def stdout(filename, mode='r', buffering=-1, encoding=None, errors=None, newline=None):
+    readable = io.open(filename=filename, mode=mode, buffering=buffering, encoding=encoding, errors=errors, newline=newline)
+    writable = sys.stdout
+    try:
+        yield readable, writable
+    finally:
+        readable.close()
+        writable.close()
+
+
 def literal_replace(pattern, replacement, original):
     return original.replace(pattern, replacement)
 
@@ -196,9 +207,26 @@ def add_text(args, filepath, raise_on_error=True, **kwargs):
         else:
             print(msg)
 
+def replace_text(args, filepath):
+    if args.pattern == '' or args.replacement_text == '':
+        sys.exit("In <add> mode, you must specify both <pattern> and <added_text>.")
+    pattern = re.compile(args.pattern)
+    replacement_text = args.replacement_text
+    found = False
+    handle_files = stdout if args.stdout else inplace
+    print(os.exists(filepath))
+    with handle_files(filepath, "r") as (infile, outfile):
+        for line in infile:
+            if pattern.search(line):
+                found = True
+                outfile.write(pattern.sub(replacement_text, line))
+    handle_not_found(found, raise_on_error)
+    print(args)
+
 
 DISPATCHER = {
     "add": add_text,
+    "replace": replace_text,
 }
 
 
