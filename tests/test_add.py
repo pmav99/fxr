@@ -29,12 +29,6 @@ def load_fixtures(path, key):
     return fixtures
 
 
-@pytest.fixture
-def temp_file(tmpdir):
-    sample_file = tmpdir.join("file.txt")
-    return sample_file
-
-
 class TestFXR(object):
 
     @abc.abstractmethod
