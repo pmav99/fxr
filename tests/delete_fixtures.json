@@ -1,0 +1,173 @@
+{
+  "valid": [
+    {
+      "description": "Do nothing!",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "matched line\nnext line\nlast line",
+     "expected": "matched line\nnext line\nlast line"
+    },
+
+    {
+      "description": "Delete the matched line at the middle of the file",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_match": true,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nmatched line\nlast line",
+     "expected": "first line\nlast line"
+    },
+    {
+      "description": "Delete the matched line at the middle of the file (multiple matches)",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_match": true,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nmatched line\nmatched line\nrandom line\nmatched line\nlast line",
+     "expected": "first line\nrandom line\nlast line"
+    },
+    {
+      "description": "Delete the matched line at the beginning of the file",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_match": true,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "matched line\nsecond line\nlast line",
+     "expected": "second line\nlast line"
+    },
+    {
+      "description": "Delete the matched line at the end of the file",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_match": true,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nsecond line\nmatched line",
+     "expected": "first line\nsecond line"
+    },
+
+    {
+      "description": "Delete one line after the matched line",
+      "lines_after": 1,
+      "lines_before": 0,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nmatched line\nto be deleted line\nlast line",
+      "expected": "first line\nmatched line\nlast line"
+    },
+    {
+      "description": "Delete one line after the matched line (multiple matches)",
+      "lines_after": 1,
+      "lines_before": 0,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nmatched line\nto be deleted line\nmatched line\nto be deleted line\nlast line",
+      "expected": "first line\nmatched line\nmatched line\nlast line"
+    },
+    {
+      "description": "Delete multiple lines after the matched line",
+      "lines_after": 3,
+      "lines_before": 0,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nmatched line\nto be deleted line\nto be deleted line\nto be deleted line\nlast line",
+      "expected": "first line\nmatched line\nlast line"
+    },
+
+    {
+      "description": "Delete one line before the matched line",
+      "lines_after": 0,
+      "lines_before": 1,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nto be deleted line\nmatched line\nlast line",
+      "expected": "first line\nmatched line\nlast line"
+    },
+    {
+      "description": "Delete one line before the matched line (multiple matches)",
+      "lines_after": 0,
+      "lines_before": 1,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nto be deleted line\nmatched line\nmiddle line\nto be deleted line\nmatched line\nlast line",
+      "expected": "first line\nmatched line\nmiddle line\nmatched line\nlast line"
+    },
+    {
+      "description": "Delete multiple lines before the matched line",
+      "lines_after": 0,
+      "lines_before": 3,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nto be deleted line\nto be deleted line\nnto be deleted line\nmatched line\nlast line",
+      "expected": "first line\nmatched line\nlast line"
+    },
+
+    {
+      "description": "Delete one line before, three lines after and the matched line",
+      "lines_after": 3,
+      "lines_before": 1,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nto be deleted line\nmatched line\nto be deleted line\nto be deleted line\nto be deleted line\nlast line",
+      "expected": "first line\nmatched line\nlast line"
+    },
+    {
+      "description": "Delete two lines before the first line of the file (i.e. leaving the file unchanged).",
+      "lines_after": 0,
+      "lines_before": 2,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "matched line\nsecond line\nlast line",
+      "expected": "matched line\nsecond line\nlast line"
+    },
+    {
+      "description": "Delete one line after the last line of the file (i.e. leaving the file unchanged).",
+      "lines_after": 1,
+      "lines_before": 0,
+      "include_match": false,
+      "raise_on_unchanged": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "first line\nsecond line\nmatched line",
+      "expected": "first line\nsecond line\nmatched line"
+    }
+  ],
+  "testcases": [
+    "Delete the line matching the pattern; Line is the first of the file.",
+    "Delete the line matching the pattern; Line is the last of the file.",
+    "Delete the line matching the pattern; Line is in the middle of the file.",
+    "Delete lines before the line matching the pattern; Line is in the middle of the file.",
+    "Delete lines after the line matching the pattern; Line is in the middle of the file.",
+    "Delete lines after the line matching the pattern",
+    "Delete a line at the end of the file.",
+    "Delete a line at the end of the file."
+  ],
+  "exceptions": []
+}

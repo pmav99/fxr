@@ -218,10 +218,63 @@ def replace_text(args, filepath, raise_on_error=False):
             fd.write(substituted)
 
 
+def literal_match(line, pattern):
+    return pattern in line
+
+
+def regex_match(line, pattern):
+    return re.search(pattern, line)
+
+
+def compress(data, indices_to_drop):
+    selectors = (0 if index in indices_to_drop else 1 for index in range(len(data)))
+    return (d for d, s in zip(data, selectors) if s)
+
+
+def delete_text(args, filepath):
+    raise_on_unchanged = args.raise_on_unchanged
+    # local names
+    pattern = args.pattern
+    lines_before = args.lines_before
+    lines_after = args.lines_after
+    include_match = args.include_match
+    # open file
+    with open(filepath) as fd:
+        original_lines = [line.strip() for line in fd.readlines()]
+    no_lines = len(original_lines)
+    # delete lines
+    match_method = literal_match if args.literal else regex_match
+    indices_to_be_deleted = []
+    for n, line in enumerate(original_lines):
+        if match_method(line, pattern):
+            # we have a match!
+            if include_match:
+                indices_to_be_deleted.append(n)
+            if lines_after:
+                indices_to_be_deleted.extend((n + i) for i in range(1, lines_after + 1))
+            if lines_before:
+                indices_to_be_deleted.extend((n - i) for i in range(1, lines_before + 1))
+    # Remove duplicates from indices_to_be_deleted
+    indices_to_be_deleted = {item for item in indices_to_be_deleted if (item >= 0 and item <= no_lines)}
+    # Discard lines to be removed.
+    lines_to_be_kept = list(compress(original_lines, indices_to_be_deleted))
+    if len(lines_to_be_kept) == no_lines:
+        msg = "Couldn't find a match."
+        if raise_on_unchanged:
+            sys.exit(msg)
+        else:
+            print("Warning: %s" % msg)
+    else:
+        # write file inplace
+        changed = "\n".join(lines_to_be_kept)
+        with open(filepath, "w") as fd:
+            fd.write(changed)
+
 
 DISPATCHER = {
     "add": add_text,
     "replace": replace_text,
+    "delete": delete_text,
 }
 
 
@@ -263,9 +316,10 @@ def cli():
 
     ### Delete
     delete_parser.add_argument("pattern", help="The pattern we want to match.")
-    delete_parser.add_argument("--after", default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
-    delete_parser.add_argument("--before", default=0, help="Number lines to delete before the matched pattern. Defaults to 0")
-    delete_parser.add_argument("--include", action="store_true", help="Also delete the matching line. Defaults to False.")
+    delete_parser.add_argument("--single", action="store", default=False, help="Delete text only from the specified file.")
+    delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
+    delete_parser.add_argument("--lines_before", type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")
+    delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")
     delete_parser.add_argument("--raise_on_unchanged", action="store_true", help="Raise an exception if the file has remained unchanged.")
     delete_parser.add_argument("--literal", action="store_true", default=False,
                                help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
