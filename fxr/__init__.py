@@ -262,8 +262,13 @@ def cli():
     # add_parser.add_argument("search_args", help="Any added_textal arguments are passed to the search executable (i.e. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
 
     ### Delete
-    # delete_parser.add_argument("pattern", help="The regex pattern we want to match.")
-
+    delete_parser.add_argument("pattern", help="The pattern we want to match.")
+    delete_parser.add_argument("--after", default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
+    delete_parser.add_argument("--before", default=0, help="Number lines to delete before the matched pattern. Defaults to 0")
+    delete_parser.add_argument("--include", action="store_true", help="Also delete the matching line. Defaults to False.")
+    delete_parser.add_argument("--raise_on_unchanged", action="store_true", help="Raise an exception if the file has remained unchanged.")
+    delete_parser.add_argument("--literal", action="store_true", default=False,
+                               help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
 
     ### Replace
     # replace_parser.add_argument("pattern", help="The regex pattern we want to match.")
