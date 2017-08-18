@@ -169,5 +169,18 @@
     "Delete a line at the end of the file.",
     "Delete a line at the end of the file."
   ],
-  "exceptions": []
+  "exceptions": [
+    {
+      "description": "No match",
+      "lines_after": 1,
+      "lines_before": 1,
+      "include_match": false,
+      "raise_if_no_match": true,
+      "literal": true,
+      "pattern": "pattern",
+      "original": "just some text",
+      "exception_type": "SystemExit",
+      "exception_text": "Couldn't find a match."
+    }
+  ]
 }

@@ -42,6 +42,6 @@ class TestFXRDelete(TestFXR):
     def test_add_valid_code(self, temp_file, args):
         self._test_run_valid_code(temp_file, args)
 
-    # @pytest.mark.parametrize("args", load_fixtures("tests/delete_fixtures.json", "exceptions"))
-    # def test_add_exceptions(self, temp_file, args):
-        # self._test_run_exceptions(temp_file, args)
+    @pytest.mark.parametrize("args", load_fixtures("tests/delete_fixtures.json", "exceptions"))
+    def test_add_exceptions(self, temp_file, args):
+        self._test_run_exceptions(temp_file, args)
