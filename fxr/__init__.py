@@ -20,16 +20,15 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 
+import io
+import os
 import re
 import sys
 import shutil
 import argparse
 import subprocess
 
-
 from contextlib import contextmanager
-import io
-import os
 
 
 def handle_no_match(args):
@@ -41,11 +40,12 @@ def handle_no_match(args):
 
 
 def get_last_line(filepath):
+    filepath = str(filepath)
     if not os.stat(filepath).st_size:
         # No reason to open empty files
         last = b''
     else:
-        with open(filepath, "rb") as fd:
+        with io.open(filepath, "rb") as fd:
             fd.readline()      # Read the first line.
             fd.seek(-2, 2)             # Jump to the second last byte.
             while fd.read(1) != b"\n": # Until EOL is found...
@@ -81,7 +81,8 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
     if set(mode).intersection('wa+'):
         raise ValueError('Only read-only file modes can be used')
 
-    backupfilename = filename + (backup_extension or os.extsep + 'bak')
+    filename = str(filename)
+    backupfilename = str(filename + (backup_extension or os.extsep + 'bak'))
     try:
         os.unlink(backupfilename)
     except os.error:
@@ -92,7 +93,7 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
     try:
         perm = os.fstat(readable.fileno()).st_mode
     except OSError:
-        writable = open(filename, 'w' + mode.replace('r', ''),
+        writable = io.open(filename, 'w' + mode.replace('r', ''),
                         buffering=buffering, encoding=encoding, errors=errors,
                         newline=newline)
     else:
@@ -111,14 +112,15 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
         yield readable, writable
     except Exception:
         # move backup back
-        os.replace(backupfilename, filename)
-        raise
-        # try:
-            # os.unlink(filename)
-        # except os.error:
-            # pass
-        # os.rename(backupfilename, filename)
+        # os.replace(backupfilename, filename)
         # raise
+        try:
+            os.unlink(filename)
+        except os.error:
+            pass
+        finally:
+            os.rename(backupfilename, filename)
+        raise
     finally:
         readable.close()
         writable.close()
@@ -169,25 +171,25 @@ def compress(data, indices_to_drop):
             # fd.write(substituted)
 
 
-# def search_for_files(search_prog, search_args, pattern):
-    # # Check if the search engine is available
-    # if shutil.which(search_prog) is None:
-        # sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
-    # # We DO need "-l" when we use ag!
-    # if search_prog == "ag":
-        # if search_args and "-l" not in search_args:
-            # search_args.append("-l")
-        # else:
-            # search_args = ['-l']
-    # cmd = [search_prog]
-    # cmd.extend(search_args)
-    # cmd.append(pattern)
-    # try:
-        # output = subprocess.check_output(cmd)
-        # filepaths = output.decode("utf-8").splitlines()
-    # except subprocess.CalledProcessError:
-        # sys.exit("Couldn't find any matches. Check your the pattern: %s" % pattern)
-    # return filepaths
+def search_for_files(search_prog, search_args, pattern):
+    # Check if the search engine is available
+    if shutil.which(search_prog) is None:
+        sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
+    # We DO need "-l" when we use ag!
+    if search_prog == "ag":
+        if search_args and "-l" not in search_args:
+            search_args.append("-l")
+        else:
+            search_args = ['-l']
+    cmd = [search_prog]
+    cmd.extend(search_args)
+    cmd.append(pattern)
+    try:
+        output = subprocess.check_output(cmd)
+        filepaths = output.decode("utf-8").splitlines()
+    except subprocess.CalledProcessError:
+        sys.exit("Couldn't find any matches. Check your the pattern: %s" % pattern)
+    return filepaths
 
 
 
@@ -210,6 +212,7 @@ def add_text(args, filepath):
     with inplace(filepath, "r") as (infile, outfile):
         for line in infile:
             if pattern.search(line):
+                # line = line.encode("utf-8")
                 found = True
                 if not prepend and line == last_line:
                     added_text = args.added_text
@@ -226,7 +229,7 @@ def replace_text(args, filepath):
     if args.pattern == '' or args.replacement == '':
         sys.exit("In <replace> mode, you must specify both <pattern> and <replacement>.")
     # open file
-    with open(filepath) as fd:
+    with io.open(filepath, "rb") as fd:
         original = fd.read()
     # replace text
     replace_method = literal_replace if args.literal else regex_replace
@@ -235,18 +238,18 @@ def replace_text(args, filepath):
         handle_no_match(args)
     else:
         # write file inplace
-        with open(filepath, "w") as fd:
+        with io.open(filepath, "wb") as fd:
             fd.write(substituted)
 
 
 def delete_text(args, filepath):
     # local names
-    pattern = args.pattern
+    pattern = args.pattern.encode("utf-8")
     lines_before = args.lines_before
     lines_after = args.lines_after
     include_match = args.include_match
     # open file
-    with open(filepath) as fd:
+    with io.open(filepath, "rb") as fd:
         original_lines = [line.strip() for line in fd.readlines()]
     no_lines = len(original_lines)
     # delete lines
@@ -269,8 +272,8 @@ def delete_text(args, filepath):
         handle_no_match(args)
     else:
         # write file inplace
-        changed = "\n".join(lines_to_be_kept)
-        with open(filepath, "w") as fd:
+        changed = b"\n".join(lines_to_be_kept)
+        with io.open(filepath, "wb") as fd:
             fd.write(changed)
 
 
@@ -284,7 +287,7 @@ DISPATCHER = {
 def main(args):
     run = DISPATCHER[args.mode]
     if args.single:
-        filepaths = [args.single]
+        filepaths = [str(args.single)]
     else:
         filepaths = search_for_files(args.search_prog, args.search_args, args.pattern)
     for filepath in filepaths:
