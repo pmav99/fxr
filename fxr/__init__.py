@@ -190,11 +190,7 @@ def add_text(args, filepath, raise_on_error=True):
             else:
                 outfile.write(line)
     if not found:
-        msg = "Couldn't find a match."
-        if raise_on_error:
-            raise sys.exit(msg)
-        else:
-            print(msg)
+        handle_no_match(args)
 
 def replace_text(args, filepath, raise_on_error=False):
     # input validation
@@ -207,11 +203,7 @@ def replace_text(args, filepath, raise_on_error=False):
     replace_method = literal_replace if args.literal else regex_replace
     substituted = replace_method(args.pattern, args.replacement, original)
     if original == substituted:
-        msg = "Couldn't find a match."
-        if raise_on_error:
-            sys.exit(msg)
-        else:
-            print("Warning: %s" % msg)
+        handle_no_match(args)
     else:
         # write file inplace
         with open(filepath, "w") as fd:
@@ -229,6 +221,14 @@ def regex_match(line, pattern):
 def compress(data, indices_to_drop):
     selectors = (0 if index in indices_to_drop else 1 for index in range(len(data)))
     return (d for d, s in zip(data, selectors) if s)
+
+
+def handle_no_match(args):
+    msg = "Couldn't find a match."
+    if args.raise_on_unchanged:
+        sys.exit(msg)
+    else:
+        print("Warning: %s" % msg)
 
 
 def delete_text(args, filepath):
