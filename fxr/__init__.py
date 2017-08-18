@@ -27,6 +27,14 @@ import io
 import os
 
 
+def handle_no_match(args):
+    msg = "Couldn't find a match."
+    if args.raise_if_no_match:
+        sys.exit(msg)
+    else:
+        print("Warning: %s" % msg)
+
+
 def get_last_line(filepath):
     if not os.stat(filepath).st_size:
         # No reason to open empty files
@@ -170,7 +178,7 @@ def main(args):
         apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
-def add_text(args, filepath, raise_on_error=True):
+def add_text(args, filepath):
     # input validation
     if args.pattern == '' or args.added_text == '':
         sys.exit("In <add> mode, you must specify both <pattern> and <added_text>.")
@@ -223,16 +231,7 @@ def compress(data, indices_to_drop):
     return (d for d, s in zip(data, selectors) if s)
 
 
-def handle_no_match(args):
-    msg = "Couldn't find a match."
-    if args.raise_on_unchanged:
-        sys.exit(msg)
-    else:
-        print("Warning: %s" % msg)
-
-
 def delete_text(args, filepath):
-    raise_on_unchanged = args.raise_on_unchanged
     # local names
     pattern = args.pattern
     lines_before = args.lines_before
@@ -259,11 +258,7 @@ def delete_text(args, filepath):
     # Discard lines to be removed.
     lines_to_be_kept = list(compress(original_lines, indices_to_be_deleted))
     if len(lines_to_be_kept) == no_lines:
-        msg = "Couldn't find a match."
-        if raise_on_unchanged:
-            sys.exit(msg)
-        else:
-            print("Warning: %s" % msg)
+        handle_no_match(args)
     else:
         # write file inplace
         changed = "\n".join(lines_to_be_kept)
@@ -309,6 +304,7 @@ def cli():
     add_parser.add_argument("added_text", help="The text that we want to add.")
     add_parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.")
     add_parser.add_argument("--prepend", action="store_true", help="Prepend text to the <pattern>'s matches. Defaults to False.")
+    add_parser.add_argument("--raise_if_no_match", action="store_true", help="Raise an exception if the file has remained unchanged.")
     add_parser.add_argument("--literal", action="store_true", default=False,
                             help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
     add_parser.add_argument("--search-prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag -s -l --hidden", metavar='')
@@ -320,7 +316,7 @@ def cli():
     delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
     delete_parser.add_argument("--lines_before", type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")
     delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")
-    delete_parser.add_argument("--raise_on_unchanged", action="store_true", help="Raise an exception if the file has remained unchanged.")
+    delete_parser.add_argument("--raise_if_no_match", action="store_true", help="Raise an exception if the file has remained unchanged.")
     delete_parser.add_argument("--literal", action="store_true", default=False,
                                help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
 

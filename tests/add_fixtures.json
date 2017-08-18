@@ -52,6 +52,7 @@
   "exceptions": [
     {
       "description": "Empty pattern",
+      "raise_if_no_match": true,
       "pattern": "",
       "prepend": true,
       "added_text": "ASDF",
@@ -61,6 +62,7 @@
     },
     {
       "description": "Empty added_text",
+      "raise_if_no_match": true,
       "pattern": "pattern",
       "prepend": true,
       "added_text": "",
@@ -73,6 +75,7 @@
       "pattern": "pattern",
       "prepend": true,
       "added_text": "added",
+      "raise_if_no_match": true,
       "original": "just some text",
       "exception_type": "SystemExit",
       "exception_text": "Couldn't find a match."

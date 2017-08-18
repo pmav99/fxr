@@ -19,8 +19,10 @@ from . import TestFXR, load_fixtures
 
 class TestFXRAdd(TestFXR):
 
+    """ Test `fxr add`. """
+
     def run_code(self, args, filepath):
-        return fxr.add_text(args=args, filepath=filepath, raise_on_error=True)
+        return fxr.add_text(args=args, filepath=filepath)
 
     def run_cli(self, filepath, pattern, added_text, prepend=False, literal=False, **kwargs):
         literal = '--literal' if literal else ''
