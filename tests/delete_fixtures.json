@@ -159,16 +159,6 @@
       "expected": "first line\nsecond line\nmatched line"
     }
   ],
-  "testcases": [
-    "Delete the line matching the pattern; Line is the first of the file.",
-    "Delete the line matching the pattern; Line is the last of the file.",
-    "Delete the line matching the pattern; Line is in the middle of the file.",
-    "Delete lines before the line matching the pattern; Line is in the middle of the file.",
-    "Delete lines after the line matching the pattern; Line is in the middle of the file.",
-    "Delete lines after the line matching the pattern",
-    "Delete a line at the end of the file.",
-    "Delete a line at the end of the file."
-  ],
   "exceptions": [
     {
       "description": "No match",
