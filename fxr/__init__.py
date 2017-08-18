@@ -200,7 +200,7 @@ def add_text(args, filepath):
     if not found:
         handle_no_match(args)
 
-def replace_text(args, filepath, raise_on_error=False):
+def replace_text(args, filepath):
     # input validation
     if args.pattern == '' or args.replacement == '':
         sys.exit("In <replace> mode, you must specify both <pattern> and <replacement>.")
@@ -284,33 +284,25 @@ def main(args):
 
 
 def cli():
-    # create the top-level parser
+    ## Create the top-level parser and the subparsers
     main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
-    # Create the parent-parser which contains the common options among the subparsers.
-    # parent_parser = argparse.ArgumentParser(add_help=False)
-    # parent_parser.add_argument("pattern", help="The regex pattern we want to match.")
-    # parent_parser.add_argument("replacement", help="The text we want to replace <pattern> with.")
-    # parent_parser.add_argument("--debug", action="store_true", default=False, help="Debug mode on")
-    # parent_parser.add_argument("--literal", action="store_true", default=False, help="Make a literal substitution (i.e. don't treat <pattern> as a regex).")
-
-    ### Create the sub-parsers.
     subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands", description="Valid subcommands")
     add_parser = subparsers.add_parser("add", help="Search for files containing <pattern> and add text before or after the matches.")
     delete_parser = subparsers.add_parser("delete", help="Delete text lines before or after match.")
     replace_parser = subparsers.add_parser("replace", help="Replace text.")
 
-    ### Add
-    add_parser.add_argument("pattern", help="The regex pattern we want to match.")
+    ## Add
+    add_parser.add_argument("pattern", help="The pattern we want to match.")
     add_parser.add_argument("added_text", help="The text that we want to add.")
     add_parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.")
     add_parser.add_argument("--prepend", action="store_true", help="Prepend text to the <pattern>'s matches. Defaults to False.")
     add_parser.add_argument("--raise_if_no_match", action="store_true", help="Raise an exception if the file has remained unchanged.")
+    add_parser.add_argument("--search-prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag -s -l --hidden", metavar='')
+    add_parser.add_argument("--search_args", help="Arguments passed to the search executable (e.g. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
     add_parser.add_argument("--literal", action="store_true", default=False,
                             help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
-    add_parser.add_argument("--search-prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag -s -l --hidden", metavar='')
-    # add_parser.add_argument("search_args", help="Any added_textal arguments are passed to the search executable (i.e. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
 
-    ### Delete
+    ## Delete
     delete_parser.add_argument("pattern", help="The pattern we want to match.")
     delete_parser.add_argument("--single", action="store", default=False, help="Delete text only from the specified file.")
     delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
@@ -320,21 +312,15 @@ def cli():
     delete_parser.add_argument("--literal", action="store_true", default=False,
                                help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
 
-    ### Replace
-    # replace_parser.add_argument("pattern", help="The regex pattern we want to match.")
+    ## Replace
+    replace_parser.add_argument("pattern", help="The pattern we want to match.")
+    replace_parser.add_argument("replacement", help="The text we want to use as a replacement.")
+    replace_parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.")
+    replace_parser.add_argument("--raise_if_no_match", action="store_true", help="Raise an exception if the file has remained unchanged.")
+    replace_parser.add_argument("--literal", action="store_true", default=False,
+                                help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
 
-    # single_parser = subparsers.add_parser('single', help='"Search & replace" on a single file', parents=[parent_parser])
-    # multi_parser = subparsers.add_parser('multi', help='Search for files matching pattern and replace all occurrences.', parents=[parent_parser], add_help=True)
-    # append_parser = subparsers.add_parser('append', help='Search for files matching pattern and append lines before of after each match.', parents=[parent_parser], add_help=True)
-    # delete_parser = subparsers.add_parser('delete', help='Search for files matching pattern and append lines before of after each match.', parents=[parent_parser], add_help=True)
-    # # single parser arguments
-    # single_parser.add_argument("filepath", help="The path to the file on which we want to replace text.")
-    # # multi parser arguments
-    # multi_parser.add_argument("search_args", help="Any added_textal arguments are passed to the search executable (i.e. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
-    # multi_parser.add_argument("--search-prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
     args = main_parser.parse_args()
-    # if args.debug:
-        # print(args)
     if args.mode:
         main(args)
     else:
