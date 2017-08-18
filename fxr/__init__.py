@@ -5,9 +5,14 @@
 
 """
 
-    python3 fxr single 'search_pattern' 'replace' /path/to/file
+Examples
+--------
 
-    python3 fxr multi 'search_pattern' 'replace' -s -l --hidden
+``` python
+fxr add 'search_pattern' 'text to be added' --single /path/to/file
+fxr delete 'search_pattern' --lines_before 2 --include_line --single /path/to/file
+fxr replace 'search_pattern' 'replace' --single /path/to/file
+```
 
 """
 
@@ -131,51 +136,66 @@ def regex_replace(pattern, replacement, original):
     return re.sub(pattern, replacement, original)
 
 
-def apply_search_and_replace(pattern, replacement, filepath, literal, raise_on_error=False):
-    # open file
-    with open(filepath) as fd:
-        original = fd.read()
-    # replace text
-    replace_method = literal_replace if literal else regex_replace
-    substituted = replace_method(pattern, replacement, original)
-    if original == substituted:
-        msg = "no substitutions made: %s" % filepath
-        if raise_on_error:
-            sys.exit(msg)
-        else:
-            print("Warning: %s" % msg)
-    else:
-        # write file inplace
-        with open(filepath, "w") as fd:
-            fd.write(substituted)
+def literal_match(line, pattern):
+    return pattern in line
 
 
-def search_for_files(search_prog, search_args, pattern):
-    # Check if the search engine is available
-    if shutil.which(search_prog) is None:
-        sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
-    # We DO need "-l" when we use ag!
-    if search_prog == "ag":
-        if search_args and "-l" not in search_args:
-            search_args.append("-l")
-        else:
-            search_args = ['-l']
-    cmd = [search_prog]
-    cmd.extend(search_args)
-    cmd.append(pattern)
-    try:
-        output = subprocess.check_output(cmd)
-        filepaths = output.decode("utf-8").splitlines()
-    except subprocess.CalledProcessError:
-        sys.exit("Couldn't find any matches. Check your the pattern: %s" % pattern)
-    return filepaths
+def regex_match(line, pattern):
+    return re.search(pattern, line)
 
 
-def main(args):
-    filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
-    raise_on_error = (len(filepaths) == 1)
-    for filepath in filepaths:
-        apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
+def compress(data, indices_to_drop):
+    selectors = (0 if index in indices_to_drop else 1 for index in range(len(data)))
+    return (d for d, s in zip(data, selectors) if s)
+
+
+
+# def apply_search_and_replace(pattern, replacement, filepath, literal, raise_on_error=False):
+    # # open file
+    # with open(filepath) as fd:
+        # original = fd.read()
+    # # replace text
+    # replace_method = literal_replace if literal else regex_replace
+    # substituted = replace_method(pattern, replacement, original)
+    # if original == substituted:
+        # msg = "no substitutions made: %s" % filepath
+        # if raise_on_error:
+            # sys.exit(msg)
+        # else:
+            # print("Warning: %s" % msg)
+    # else:
+        # # write file inplace
+        # with open(filepath, "w") as fd:
+            # fd.write(substituted)
+
+
+# def search_for_files(search_prog, search_args, pattern):
+    # # Check if the search engine is available
+    # if shutil.which(search_prog) is None:
+        # sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
+    # # We DO need "-l" when we use ag!
+    # if search_prog == "ag":
+        # if search_args and "-l" not in search_args:
+            # search_args.append("-l")
+        # else:
+            # search_args = ['-l']
+    # cmd = [search_prog]
+    # cmd.extend(search_args)
+    # cmd.append(pattern)
+    # try:
+        # output = subprocess.check_output(cmd)
+        # filepaths = output.decode("utf-8").splitlines()
+    # except subprocess.CalledProcessError:
+        # sys.exit("Couldn't find any matches. Check your the pattern: %s" % pattern)
+    # return filepaths
+
+
+
+# def main(args):
+    # filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
+    # raise_on_error = (len(filepaths) == 1)
+    # for filepath in filepaths:
+        # apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
 def add_text(args, filepath):
@@ -200,6 +220,7 @@ def add_text(args, filepath):
     if not found:
         handle_no_match(args)
 
+
 def replace_text(args, filepath):
     # input validation
     if args.pattern == '' or args.replacement == '':
@@ -216,19 +237,6 @@ def replace_text(args, filepath):
         # write file inplace
         with open(filepath, "w") as fd:
             fd.write(substituted)
-
-
-def literal_match(line, pattern):
-    return pattern in line
-
-
-def regex_match(line, pattern):
-    return re.search(pattern, line)
-
-
-def compress(data, indices_to_drop):
-    selectors = (0 if index in indices_to_drop else 1 for index in range(len(data)))
-    return (d for d, s in zip(data, selectors) if s)
 
 
 def delete_text(args, filepath):
