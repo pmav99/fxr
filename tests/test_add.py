@@ -21,8 +21,12 @@ import pytest
 
 
 
-with open("./tests/fixtures.json") as fd:
-    FIXTURES = json.load(fd)
+def load_fixtures(path, key):
+    if key not in {"valid", "exceptions"}:
+        raise ValueError('<key> must be one of `{"valid", "exceptions"}`, not `%s`' % key)
+    with open(path) as fd:
+        fixtures = json.load(fd)[key]
+    return fixtures
 
 
 @pytest.fixture
@@ -34,23 +38,36 @@ def temp_file(tmpdir):
 class TestFXR(object):
 
     @abc.abstractmethod
-    def run_cli(self, *args, **kwargs):
-        pass
+    def run_cli(self, args, filepath):
+        raise NotImplementedError
 
     @abc.abstractmethod
-    def run_code(self, *args, **kwargs):
-        pass
+    def run_code(self, args, filepath):
+        raise NotImplementedError
 
-    def _test_exception(self, temp_file, testdata):
-        testdata = Munch(**testdata)
-        temp_file.write(testdata["original"])
+    def _test_run_valid_cli(self, temp_file, args):
+        temp_file.write(args["original"])
+        self.run_cli(temp_file, **args)
+        assert temp_file.read() == args["expected"]
+
+    def _test_run_valid_code(self, temp_file, args):
+        args = Munch(**args)
+        temp_file.write(args["original"])
+        self.run_code(args=args, filepath=temp_file)
+        assert temp_file.read() == args["expected"]
+
+    def _test_run_exceptions(self, temp_file, args):
+        args = Munch(**args)
+        temp_file.write(args["original"])
         with pytest.raises(SystemExit) as exc:
-            self.run_code(temp_file, testdata)
-        assert exc.typename == testdata["exception_type"]
-        assert str(exc.value) == testdata["exception_text"]
-
+            self.run_code(args=args, filepath=temp_file)
+        assert exc.typename == args["exception_type"]
+        assert str(exc.value) == args["exception_text"]
 
 class TestFXRAdd(TestFXR):
+
+    def run_code(self, args, filepath):
+        return fxr.add_text(args=args, filepath=filepath, raise_on_error=True)
 
     def run_cli(self, filepath, pattern, added_text, prepend=False, literal=False, **kwargs):
         literal = '--literal' if literal else ''
@@ -59,25 +76,20 @@ class TestFXRAdd(TestFXR):
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 
-    def run_code(self, filepath, testdata):
-        return fxr.add_text(args=testdata, filepath=filepath, raise_on_error=True)
+    @pytest.mark.parametrize("args", load_fixtures("tests/add_fixtures.json", "valid"))
+    def test_add_valid_cli(self, temp_file, args):
+        self._test_run_valid_cli(temp_file, args)
 
-    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
-    def test_add_valid_cli(self, temp_file, testdata):
-        temp_file.write(testdata["original"])
-        self.run_cli(temp_file, **testdata)
-        assert temp_file.read() == testdata["expected"]
+    @pytest.mark.parametrize("args", load_fixtures("tests/add_fixtures.json", "valid"))
+    def test_add_valid_code(self, temp_file, args):
+        self._test_run_valid_code(temp_file, args)
 
-    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["valid"])
-    def test_add_valid_code(self, temp_file, testdata):
-        testdata = Munch(**testdata)
-        temp_file.write(testdata["original"])
-        self.run_code(temp_file, testdata)
-        assert temp_file.read() == testdata["expected"]
+    @pytest.mark.parametrize("args", load_fixtures("tests/add_fixtures.json", "exceptions"))
+    def test_add_exceptions(self, temp_file, args):
+        self._test_run_exceptions(temp_file, args)
 
-    @pytest.mark.parametrize("testdata", FIXTURES["tests"]["add"]["exceptions"])
-    def test_add_exceptions(self, temp_file, testdata):
-        self._test_exception(temp_file, testdata)
+
+
 
 
 class TestFXRReplace(TestFXR):
