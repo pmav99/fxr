@@ -298,10 +298,10 @@ def main(args):
 def cli():
     ## Create the top-level parser and the subparsers
     main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
-    subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands", description="Valid subcommands")
-    add_parser = subparsers.add_parser("add", help="Search for files containing <pattern> and add text before or after the matches.")
-    delete_parser = subparsers.add_parser("delete", help="Delete text lines before or after match.")
-    replace_parser = subparsers.add_parser("replace", help="Replace text.")
+    subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands")
+    add_parser = subparsers.add_parser("add", help="Append/prepend text to lines matching <pattern>.")
+    delete_parser = subparsers.add_parser("delete", help="Delete text before/after lines matching <pattern>.")
+    replace_parser = subparsers.add_parser("replace", help="Replace text in lines matching <pattern>.")
 
     ## Add
     add_parser.add_argument("pattern", help="The pattern we want to match.")
