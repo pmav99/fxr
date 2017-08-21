@@ -30,7 +30,7 @@ You can install `fxr` from pypi:
 
 `pip install fxr`
 
-Current version is `0.1.0`:
+Current version is `0.2.0`:
 
 ## Modes of operation
 
