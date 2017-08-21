@@ -45,7 +45,7 @@ def get_last_line(filepath):
         # No reason to open empty files
         last = b''
     else:
-        with io.open(filepath, "rb") as fd:
+        with io.open(str(filepath), "rb") as fd:
             fd.readline()      # Read the first line.
             fd.seek(-2, 2)             # Jump to the second last byte.
             while fd.read(1) != b"\n": # Until EOL is found...
@@ -229,7 +229,7 @@ def replace_text(args, filepath):
     if args.pattern == '' or args.replacement == '':
         sys.exit("In <replace> mode, you must specify both <pattern> and <replacement>.")
     # open file
-    with io.open(filepath, "rb") as fd:
+    with io.open(str(filepath), "rb") as fd:
         original = fd.read().decode('utf-8')
     # replace text
     replace_method = literal_replace if args.literal else regex_replace
@@ -238,7 +238,7 @@ def replace_text(args, filepath):
         handle_no_match(args)
     else:
         # write file inplace
-        with io.open(filepath, "wb") as fd:
+        with io.open(str(filepath), "wb") as fd:
             fd.write(substituted.encode('utf-8'))
 
 
@@ -249,7 +249,7 @@ def delete_text(args, filepath):
     lines_after = args.lines_after
     include_match = args.include_match
     # open file
-    with io.open(filepath, "rb") as fd:
+    with io.open(str(filepath), "rb") as fd:
         original_lines = [line.strip() for line in fd.readlines()]
     no_lines = len(original_lines)
     # delete lines
@@ -273,7 +273,7 @@ def delete_text(args, filepath):
     else:
         # write file inplace
         changed = b"\n".join(lines_to_be_kept)
-        with io.open(filepath, "wb") as fd:
+        with io.open(str(filepath), "wb") as fd:
             fd.write(changed)
 
 
