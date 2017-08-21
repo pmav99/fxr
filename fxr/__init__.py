@@ -172,9 +172,11 @@ def compress(data, indices_to_drop):
             # fd.write(substituted)
 
 
-def search_for_files(search_prog, search_args, pattern):
+def search_for_files(args):
+    search_prog = args.search_prog
+    search_args = args.search_args
     # Check if the search engine is available
-    if shutil.which(search_prog) is None:
+    if shutil.which(args.search_prog) is None:
         sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
     # We DO need "-l" when we use ag!
     if search_prog == "ag":
@@ -182,14 +184,17 @@ def search_for_files(search_prog, search_args, pattern):
             search_args.append("-l")
         else:
             search_args = ['-l']
+    # most search programs support -F as an alias for --literal for grep compatibility.
+    if args.literal:
+        search_args.append("--F")
     cmd = [search_prog]
     cmd.extend(search_args)
-    cmd.append(pattern)
+    cmd.append(args.pattern)
     try:
         output = subprocess.check_output(cmd)
         filepaths = output.decode("utf-8").splitlines()
     except subprocess.CalledProcessError:
-        sys.exit("Couldn't find any matches. Check your the pattern: %s" % pattern)
+        sys.exit("Couldn't find any matches. Check your the pattern: %s" % args.pattern)
     return filepaths
 
 
@@ -290,7 +295,7 @@ def main(args):
     if args.single:
         filepaths = [str(args.single)]
     else:
-        filepaths = search_for_files(args.search_prog, args.search_args, args.pattern)
+        filepaths = search_for_files(args)
     for filepath in filepaths:
         run(args, filepath)
 
