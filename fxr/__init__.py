@@ -230,7 +230,7 @@ def replace_text(args, filepath):
         sys.exit("In <replace> mode, you must specify both <pattern> and <replacement>.")
     # open file
     with io.open(filepath, "rb") as fd:
-        original = fd.read()
+        original = fd.read().decode('utf-8')
     # replace text
     replace_method = literal_replace if args.literal else regex_replace
     substituted = replace_method(args.pattern, args.replacement, original)
@@ -239,7 +239,7 @@ def replace_text(args, filepath):
     else:
         # write file inplace
         with io.open(filepath, "wb") as fd:
-            fd.write(substituted)
+            fd.write(substituted.encode('utf-8'))
 
 
 def delete_text(args, filepath):

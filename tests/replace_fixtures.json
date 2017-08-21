@@ -1,0 +1,78 @@
+{
+  "testcases": [
+    "Replace pattern on single line",
+    "Replace pattern on multiple lines",
+    "Replace pattern which spans multiple lines; This could be composed of several calls",
+    "Replace multiple matches on a single line."
+  ],
+  "valid": [
+    {
+      "description": "Replace literal pattern on single line.",
+      "literal": true,
+      "raise_if_no_match": true,
+      "pattern": "middle",
+      "replacement": "MIDDLE",
+      "original": "first line\nmiddle line\nlast line",
+      "expected": "first line\nMIDDLE line\nlast line"
+    },
+    {
+      "description": "Replace literal pattern on single line 2.",
+      "literal": true,
+      "raise_if_no_match": true,
+      "pattern": "(mid)",
+      "replacement": "[MID]",
+      "original": "first line\n(mid)dle line\nlast line",
+      "expected": "first line\n[MID]dle line\nlast line"
+    },
+    {
+      "description": "Replace regex pattern on single line 1.",
+      "literal": false,
+      "raise_if_no_match": true,
+      "pattern": "(mid)",
+      "replacement": "[MID]",
+      "original": "first line\n(mid)dle line\nlast line",
+      "expected": "first line\n([MID])dle line\nlast line"
+    },
+    {
+      "description": "Replace regex pattern on multiple lines.",
+      "literal": false,
+      "raise_if_no_match": true,
+      "pattern": "(mi\\d{2}le)",
+      "replacement": "MIDDLE",
+      "original": "first line\nmiddle line\nmi23le line\nmi34le line\nlast line",
+      "expected": "first line\nmiddle line\nMIDDLE line\nMIDDLE line\nlast line"
+    }
+  ],
+  "exceptions": [
+    {
+      "description": "Empty pattern",
+      "literal": true,
+      "raise_if_no_match": true,
+      "pattern": "",
+      "replacement": "ASDF",
+      "original": "just some text",
+      "exception_type": "SystemExit",
+      "exception_text": "In <replace> mode, you must specify both <pattern> and <replacement>."
+    },
+    {
+      "description": "Empty replacement",
+      "literal": true,
+      "raise_if_no_match": true,
+      "pattern": "pattern",
+      "replacement": "",
+      "original": "just some text",
+      "exception_type": "SystemExit",
+      "exception_text": "In <replace> mode, you must specify both <pattern> and <replacement>."
+    },
+    {
+      "description": "No match",
+      "literal": true,
+      "raise_if_no_match": true,
+      "pattern": "pattern",
+      "replacement": "added",
+      "original": "just some text",
+      "exception_type": "SystemExit",
+      "exception_text": "Couldn't find a match."
+    }
+  ]
+}
