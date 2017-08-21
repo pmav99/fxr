@@ -35,12 +35,6 @@ setup(
             'fxr=fxr:cli'
         ]
     },
-
-    # packages=[
-        # 'fxr',
-    # ],
-    # package_dir={'fxr': 'fxr'},
-    # install_requires=requirements,
     test_suite='tests',
     tests_require=test_requirements,
 

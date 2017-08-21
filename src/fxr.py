@@ -48,15 +48,15 @@ def get_last_line(filepath):
     else:
         with io.open(str(filepath), "rb") as fd:
             fd.readline()      # Read the first line.
-            fd.seek(-2, 2)             # Jump to the second last byte.
-            while fd.read(1) != b"\n": # Until EOL is found...
+            fd.seek(-2, 2)              # Jump to the second last byte.
+            while fd.read(1) != b"\n":  # Until EOL is found...
                 try:
-                    fd.seek(-2, 1)         # ...jump back the read byte plus one more.
+                    fd.seek(-2, 1)      # ...jump back the read byte plus one more.
                 except IOError:
                     # the file has just a single line!
                     fd.seek(0)
                     break
-            last = fd.readline()       # Read last line.
+            last = fd.readline()        # Read last line.
     return last.decode('utf-8')
 
 
@@ -94,9 +94,8 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
     try:
         perm = os.fstat(readable.fileno()).st_mode
     except OSError:
-        writable = io.open(filename, 'w' + mode.replace('r', ''),
-                        buffering=buffering, encoding=encoding, errors=errors,
-                        newline=newline)
+        writable = io.open(filename, 'w' + mode.replace('r', ''), buffering=buffering,
+                           encoding=encoding, errors=errors, newline=newline)
     else:
         os_mode = os.O_CREAT | os.O_WRONLY | os.O_TRUNC
         if hasattr(os, 'O_BINARY'):
@@ -152,24 +151,23 @@ def compress(data, indices_to_drop):
     return (d for d, s in zip(data, selectors) if s)
 
 
-
 # def apply_search_and_replace(pattern, replacement, filepath, literal, raise_on_error=False):
-    # # open file
-    # with open(filepath) as fd:
-        # original = fd.read()
-    # # replace text
-    # replace_method = literal_replace if literal else regex_replace
-    # substituted = replace_method(pattern, replacement, original)
-    # if original == substituted:
-        # msg = "no substitutions made: %s" % filepath
-        # if raise_on_error:
-            # sys.exit(msg)
-        # else:
-            # print("Warning: %s" % msg)
-    # else:
-        # # write file inplace
-        # with open(filepath, "w") as fd:
-            # fd.write(substituted)
+#   # # open file
+#   # with open(filepath) as fd:
+#       # original = fd.read()
+#   # # replace text
+#   # replace_method = literal_replace if literal else regex_replace
+#   # substituted = replace_method(pattern, replacement, original)
+#   # if original == substituted:
+#       # msg = "no substitutions made: %s" % filepath
+#       # if raise_on_error:
+#           # sys.exit(msg)
+#       # else:
+#           # print("Warning: %s" % msg)
+#   # else:
+#       # # write file inplace
+#       # with open(filepath, "w") as fd:
+#           # fd.write(substituted)
 
 
 def search_for_files(args):
@@ -198,12 +196,11 @@ def search_for_files(args):
     return filepaths
 
 
-
 # def main(args):
-    # filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
-    # raise_on_error = (len(filepaths) == 1)
-    # for filepath in filepaths:
-        # apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
+#   # filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
+#   # raise_on_error = (len(filepaths) == 1)
+#   # for filepath in filepaths:
+#       # apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
 def add_text(args, filepath):
@@ -301,35 +298,35 @@ def main(args):
 
 
 def add_common_args_to_cli_subcommand(parser):
-    parser.add_argument("--literal", action="store_true", default=False, help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
-    parser.add_argument("--raise_if_no_change", action="store_true", help="Raise an exception if the file has remained unchanged.")
-    parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.", metavar='')
-    parser.add_argument("--search_prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
-    parser.add_argument("--search_args", help="Arguments passed to the search executable (e.g. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))
+    parser.add_argument("--literal", action="store_true", default=False, help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")                 # noqa
+    parser.add_argument("--raise_if_no_change", action="store_true", help="Raise an exception if the file has remained unchanged.")                                     # noqa
+    parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.", metavar='')                                             # noqa
+    parser.add_argument("--search_prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')         # noqa
+    parser.add_argument("--search_args", help="Arguments passed to the search executable (e.g. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))     # noqa
 
 
 def cli():
-    ## Create the top-level parser and the subparsers
+    # Create the top-level parser and the subparsers
     main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
-    subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands")
-    add_parser = subparsers.add_parser("add", help="Append/prepend text to lines matching <pattern>.")
-    delete_parser = subparsers.add_parser("delete", help="Delete text before/after lines matching <pattern>.")
-    replace_parser = subparsers.add_parser("replace", help="Replace text in lines matching <pattern>.")
+    subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands")      # noqa
+    add_parser = subparsers.add_parser("add", help="Append/prepend text to lines matching <pattern>.")              # noqa
+    delete_parser = subparsers.add_parser("delete", help="Delete text before/after lines matching <pattern>.")      # noqa
+    replace_parser = subparsers.add_parser("replace", help="Replace text in lines matching <pattern>.")             # noqa
 
-    ## Add
+    # Add
     add_parser.add_argument("pattern", help="The pattern we want to match.")
     add_parser.add_argument("added_text", help="The text that we want to add.")
     add_parser.add_argument("--prepend", action="store_true", help="Prepend text to the <pattern>'s matches. Defaults to False.")
     add_common_args_to_cli_subcommand(add_parser)
 
-    ## Delete
+    # Delete
     delete_parser.add_argument("pattern", help="The pattern we want to match.")
-    delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")
-    delete_parser.add_argument("--lines_before", type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")
-    delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")
+    delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")       # noqa
+    delete_parser.add_argument("--lines_before", type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")      # noqa
+    delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")                    # noqa
     add_common_args_to_cli_subcommand(delete_parser)
 
-    ## Replace
+    # Replace
     replace_parser.add_argument("pattern", help="The pattern we want to match.")
     replace_parser.add_argument("replacement", help="The text we want to use as a replacement.")
     add_common_args_to_cli_subcommand(replace_parser)

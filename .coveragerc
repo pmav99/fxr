@@ -1,12 +1,12 @@
 [paths]
 source =
-   src/nameless
-   */site-packages/nameless
+   src/fxr.py
+   */site-packages/fxr
 
 [run]
 branch = true
 source =
-    nameless
+    fxr
     tests
 parallel = true
 
