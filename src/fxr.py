@@ -112,9 +112,6 @@ def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
     try:
         yield readable, writable
     except Exception:
-        # move backup back
-        # os.replace(backupfilename, filename)
-        # raise
         try:
             os.unlink(filename)
         except os.error:
@@ -152,30 +149,11 @@ def compress(data, indices_to_drop):
     return (d for d, s in zip(data, selectors) if s)
 
 
-# def apply_search_and_replace(pattern, replacement, filepath, literal, raise_on_error=False):
-#   # # open file
-#   # with open(filepath) as fd:
-#       # original = fd.read()
-#   # # replace text
-#   # replace_method = literal_replace if literal else regex_replace
-#   # substituted = replace_method(pattern, replacement, original)
-#   # if original == substituted:
-#       # msg = "no substitutions made: %s" % filepath
-#       # if raise_on_error:
-#           # sys.exit(msg)
-#       # else:
-#           # print("Warning: %s" % msg)
-#   # else:
-#       # # write file inplace
-#       # with open(filepath, "w") as fd:
-#           # fd.write(substituted)
-
-
 def search_for_files(args):
     search_prog = args.search_prog
     search_args = args.search_args
     # Check if the search engine is available
-    if shutil.which(args.search_prog) is None:
+    if shutil.which(search_prog) is None:
         sys.exit("Coulnd't find <%s>. Please install it and try again." % search_prog)
     # We DO need "-l" when we use ag!
     if search_prog == "ag":
@@ -195,13 +173,6 @@ def search_for_files(args):
     except subprocess.CalledProcessError:
         sys.exit("Couldn't find any matches. Check your the pattern: %s" % args.pattern)
     return filepaths
-
-
-# def main(args):
-#   # filepaths = [args.filepath] if args.mode == "single" else search_for_files(args.search_prog, args.search_args, args.pattern)
-#   # raise_on_error = (len(filepaths) == 1)
-#   # for filepath in filepaths:
-#       # apply_search_and_replace(args.pattern, args.replacement, filepath, args.literal, raise_on_error)
 
 
 def add_text(args, filepath):
