@@ -163,7 +163,7 @@ def search_for_files(args):
             search_args = ['-l']
     # most search programs support -F as an alias for --literal for grep compatibility.
     if args.literal:
-        search_args.append("--F")
+        search_args.append("-F")
     cmd = [search_prog]
     cmd.extend(search_args)
     cmd.append(args.pattern)
