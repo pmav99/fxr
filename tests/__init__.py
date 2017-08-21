@@ -7,6 +7,8 @@ import re
 import abc
 import json
 import shlex
+import pprint
+import difflib
 import subprocess
 
 import importlib
@@ -24,6 +26,11 @@ def load_fixtures(path, key):
     return fixtures
 
 
+def assert_OK(temp_file, expected):
+    diff = difflib.unified_diff([l.strip() for l in temp_file.readlines()], expected.splitlines())
+    assert temp_file.read() == expected, pprint.pformat(diff)
+
+
 class TestFXR(object):
 
     """ Base class for testing fxr. """
@@ -39,13 +46,13 @@ class TestFXR(object):
     def _test_run_valid_cli(self, temp_file, args):
         temp_file.write(args["original"])
         self.run_cli(temp_file, **args)
-        assert temp_file.read() == args["expected"]
+        assert_OK(temp_file, args["expected"])
 
     def _test_run_valid_code(self, temp_file, args):
         args = Munch(**args)
         temp_file.write(args["original"])
         self.run_code(args=args, filepath=temp_file)
-        assert temp_file.read() == args["expected"]
+        assert_OK(temp_file, args["expected"])
 
     def _test_run_exceptions(self, temp_file, args):
         args = Munch(**args)
