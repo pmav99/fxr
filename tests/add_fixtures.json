@@ -53,6 +53,24 @@
       "added_text": "NEW LINE",
       "original": "First Line A\nSecond Line B\nThird Line C",
       "expected": "First Line A\nSecond Line B\nNEW LINE\nThird Line C"
+    },
+    {
+      "description": "Prepend multiple lines at the start of the file",
+      "raise_if_no_match": true,
+      "pattern": "First",
+      "prepend": true,
+      "added_text": "NEW LINE\nNEW LINE\nNEW LINE",
+      "original": "First Line A\nSecond Line B\nThird Line C",
+      "expected": "NEW LINE\nNEW LINE\nNEW LINE\nFirst Line A\nSecond Line B\nThird Line C"
+    },
+    {
+      "description": "Append multiple lines at the end of the file",
+      "raise_if_no_match": true,
+      "pattern": "Third",
+      "prepend": false,
+      "added_text": "NEW LINE\nNEW LINE\nNEW LINE",
+      "original": "First Line A\nSecond Line B\nThird Line C",
+      "expected": "First Line A\nSecond Line B\nThird Line C\nNEW LINE\nNEW LINE\nNEW LINE"
     }
   ],
   "exceptions": [
