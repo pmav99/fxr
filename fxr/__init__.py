@@ -216,7 +216,7 @@ def add_text(args, filepath):
                 # line = line.encode("utf-8")
                 found = True
                 if not prepend and line == last_line:
-                    added_text = args.added_text
+                    added_text = "\n" + args.added_text
                 lines = [added_text, line] if prepend else [line, added_text]
                 outfile.writelines(lines)
             else:

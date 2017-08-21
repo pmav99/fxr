@@ -33,10 +33,10 @@
       "expected": "First Line A\nNEW LINE\nSecond Line B\nThird Line C"
     },
     {
-      "description": "Append at the end of the file; You need to add a new line!",
+      "description": "Append at the end of the file",
       "pattern": "Third",
       "prepend": false,
-      "added_text": "\nNEW LINE",
+      "added_text": "NEW LINE",
       "original": "First Line A\nSecond Line B\nThird Line C",
       "expected": "First Line A\nSecond Line B\nThird Line C\nNEW LINE"
     },
