@@ -26,7 +26,11 @@ There were two compelling arguments that made me write this:
 
 ## Installation
 
+You can install `fxr` from pypi:
+
 `pip install fxr`
+
+Current version is `0.1.0`:
 
 ## Modes of operation
 

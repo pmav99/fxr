@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # module: fxr
+# version: 0.1.0
 # author: Panagiotis Mavrogiorgos - pmav99 google mail
 
 """
