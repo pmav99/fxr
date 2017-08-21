@@ -3,6 +3,7 @@
     {
       "description": "Append at the start of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "First",
       "prepend": false,
       "added_text": "NEW LINE",
@@ -12,6 +13,7 @@
     {
       "description": "Prepend at the start of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "First",
       "prepend": true,
       "added_text": "NEW LINE",
@@ -21,6 +23,7 @@
     {
       "description": "Append at the middle of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "Second",
       "prepend": false,
       "added_text": "NEW LINE",
@@ -30,6 +33,7 @@
     {
       "description": "Prepend at the middle of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "Second",
       "prepend": true,
       "added_text": "NEW LINE",
@@ -39,6 +43,7 @@
     {
       "description": "Append at the end of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "Third",
       "prepend": false,
       "added_text": "NEW LINE",
@@ -48,6 +53,7 @@
     {
       "description": "Prepend at the end of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "Third",
       "prepend": true,
       "added_text": "NEW LINE",
@@ -57,6 +63,7 @@
     {
       "description": "Prepend multiple lines at the start of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "First",
       "prepend": true,
       "added_text": "NEW LINE\nNEW LINE\nNEW LINE",
@@ -66,6 +73,7 @@
     {
       "description": "Append multiple lines at the end of the file",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "Third",
       "prepend": false,
       "added_text": "NEW LINE\nNEW LINE\nNEW LINE",
@@ -77,6 +85,7 @@
     {
       "description": "Empty pattern",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "",
       "prepend": true,
       "added_text": "ASDF",
@@ -87,6 +96,7 @@
     {
       "description": "Empty added_text",
       "raise_if_no_match": true,
+      "literal": true,
       "pattern": "pattern",
       "prepend": true,
       "added_text": "",
@@ -100,6 +110,7 @@
       "prepend": true,
       "added_text": "added",
       "raise_if_no_match": true,
+      "literal": true,
       "original": "just some text",
       "exception_type": "SystemExit",
       "exception_text": "Couldn't find a match."

@@ -24,7 +24,7 @@ class TestFXRAdd(TestFXR):
     def run_code(self, args, filepath):
         return fxr.add_text(args=args, filepath=filepath)
 
-    def run_cli(self, filepath, pattern, added_text, prepend=False, literal=False, **kwargs):
+    def run_cli(self, filepath, pattern, added_text, prepend, literal, **kwargs):
         literal = '--literal' if literal else ''
         prepend = "--prepend" if prepend else ''
         cmd = "fxr add {literal} {prepend} --single {filepath} '{pattern}' '{added_text}'"
