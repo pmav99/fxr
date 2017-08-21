@@ -1,22 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os.path
+import glob
+
 from setuptools import setup
+from setuptools import find_packages
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-# with open('HISTORY.rst') as history_file:
-    # history = history_file.read()
-
-requirements = [
-    # 'Click>=6.0',
-    # TODO: put package requirements here
-]
 
 test_requirements = [
-    'munch',
-    # TODO: put package test requirements here
+    "munch",
+    "py.test",
 ]
 
 setup(
@@ -27,19 +24,27 @@ setup(
     author="Panos Mavrogiorgos",
     author_email='pmav99@gmail.com',
     url='https://github.com/pmav99/fxr',
-    packages=[
-        'fxr',
-    ],
-    package_dir={'fxr': 'fxr'},
+
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    py_modules=[os.path.splitext(os.path.basename(path))[0] for path in glob.glob('src/*.py')],
+    include_package_data=True,
+    zip_safe=False,
     entry_points={
         'console_scripts': [
             'fxr=fxr:cli'
         ]
     },
-    include_package_data=True,
-    install_requires=requirements,
+
+    # packages=[
+        # 'fxr',
+    # ],
+    # package_dir={'fxr': 'fxr'},
+    # install_requires=requirements,
+    test_suite='tests',
+    tests_require=test_requirements,
+
     license="MIT license",
-    zip_safe=False,
     keywords=['find', 'replace', 'find and replace'],
     classifiers=[
         'Development Status :: 2 - Alpha',
@@ -50,6 +55,4 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
 )
