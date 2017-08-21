@@ -34,7 +34,7 @@ from contextlib import contextmanager
 
 def handle_no_match(args):
     msg = "Couldn't find a match."
-    if args.raise_if_no_match:
+    if args.raise_if_no_change:
         sys.exit(msg)
     else:
         print("Warning: %s" % msg)
@@ -297,7 +297,7 @@ def main(args):
 
 def add_common_args_to_cli_subcommand(parser):
     parser.add_argument("--literal", action="store_true", default=False, help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")
-    parser.add_argument("--raise_if_no_match", action="store_true", help="Raise an exception if the file has remained unchanged.")
+    parser.add_argument("--raise_if_no_change", action="store_true", help="Raise an exception if the file has remained unchanged.")
     parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.", metavar='')
     parser.add_argument("--search_prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')
     parser.add_argument("--search_args", help="Arguments passed to the search executable (e.g. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))

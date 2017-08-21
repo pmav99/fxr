@@ -2,7 +2,7 @@
   "valid": [
     {
       "description": "Append at the start of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "First",
       "prepend": false,
@@ -12,7 +12,7 @@
     },
     {
       "description": "Prepend at the start of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "First",
       "prepend": true,
@@ -22,7 +22,7 @@
     },
     {
       "description": "Append at the middle of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "Second",
       "prepend": false,
@@ -32,7 +32,7 @@
     },
     {
       "description": "Prepend at the middle of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "Second",
       "prepend": true,
@@ -42,7 +42,7 @@
     },
     {
       "description": "Append at the end of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "Third",
       "prepend": false,
@@ -52,7 +52,7 @@
     },
     {
       "description": "Prepend at the end of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "Third",
       "prepend": true,
@@ -62,7 +62,7 @@
     },
     {
       "description": "Prepend multiple lines at the start of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "First",
       "prepend": true,
@@ -72,7 +72,7 @@
     },
     {
       "description": "Append multiple lines at the end of the file",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "Third",
       "prepend": false,
@@ -84,7 +84,7 @@
   "exceptions": [
     {
       "description": "Empty pattern",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "",
       "prepend": true,
@@ -95,7 +95,7 @@
     },
     {
       "description": "Empty added_text",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "pattern": "pattern",
       "prepend": true,
@@ -109,7 +109,7 @@
       "pattern": "pattern",
       "prepend": true,
       "added_text": "added",
-      "raise_if_no_match": true,
+      "raise_if_no_change": true,
       "literal": true,
       "original": "just some text",
       "exception_type": "SystemExit",
