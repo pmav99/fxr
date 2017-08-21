@@ -19,7 +19,7 @@ All you need is Python `2.7+/3.3+` and a search program like
 
 `pip install fxr`
 
-The latest version is `0.2.0`:
+The latest version is `0.2.1`:
 
 ## Modes of operation
 
