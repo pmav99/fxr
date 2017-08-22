@@ -43,7 +43,7 @@ fxr add --prepend <pattern> <added_text>    # Prepends text to lines matching pa
 
 ### `fxr delete`
 
-In this mode you can:
+In this mode you search for lines matching `<pattern>` and you can:
 
 1. delete N lines preceding the matching line
 2. delete M lines following the matching line
@@ -102,7 +102,7 @@ There were two compelling arguments that made me write this:
 
 The script has not been written with performance in mind.  Since the search for matching files is
 being done using `ag`, performance shouldn't be too bad, but keep in mind that the main use case
-is to make changes to source code and configuration files; not a 2GB CSV file.
+is to make changes to source code and configuration files; not a multi-GB CSV file/database dump.
 
 ### Search programs
 
