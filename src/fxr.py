@@ -309,3 +309,7 @@ def cli():
     else:
         main_parser.print_help()
         sys.exit(0)
+
+
+if __name__ == "__main__":
+    cli()
