@@ -20,7 +20,10 @@ at your own risk!*
 All you need is Python `2.7+/3.3+` and a search program like
 [`ag`](https://github.com/ggreer/the_silver_searcher):
 
-`pip install fxr`
+```
+pip install -U fxr
+pip install --user -U fxr           # this will install fxr on ~/.local/
+```
 
 The latest version is `0.2.3`:
 
