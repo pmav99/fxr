@@ -26,6 +26,12 @@ The latest version is `0.2.1`:
 
 ## Modes of operation
 
+`fxr` has three modes of operations:
+
+* `fxr add`
+* `fxr delete`
+* `fxr replace`
+
 ### `fxr add`
 
 In this mode you search for lines matching `<pattern>` and you append/prepend text to them.
@@ -98,7 +104,7 @@ The script has not been written with performance in mind.  Since the search for 
 being done using `ag`, performance shouldn't be too bad, but keep in mind that the main use case
 is to make changes to source code and configuration files; not a 2GB CSV file.
 
-### `Search programs`
+### Search programs
 
 If you wish to use a different program than `ag` you can do so by using the appropriate `CLI` argument.
 
