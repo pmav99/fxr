@@ -54,7 +54,7 @@ E.g. to delete 3 lines before the line matching pattern, 2 lines after it and th
 itself:
 
 ```
-fxr delete --before 3 --after 2 --include_match <pattern>
+fxr delete --before 3 --after 2 --include_line <pattern>
 ```
 
 ### `fxr replace`

@@ -222,7 +222,7 @@ def delete_text(args, filepath):
     pattern = args.pattern.encode("utf-8")
     lines_before = args.lines_before
     lines_after = args.lines_after
-    include_match = args.include_match
+    include_line = args.include_line
     # open file
     with io.open(str(filepath), "rb") as fd:
         original_lines = [line.strip() for line in fd.readlines()]
@@ -233,7 +233,7 @@ def delete_text(args, filepath):
     for n, line in enumerate(original_lines):
         if match_method(line, pattern):
             # we have a match!
-            if include_match:
+            if include_line:
                 indices_to_be_deleted.append(n)
             if lines_after:
                 indices_to_be_deleted.extend((n + i) for i in range(1, lines_after + 1))
@@ -295,7 +295,7 @@ def cli():
     delete_parser.add_argument("pattern", help="The pattern we want to match.")
     delete_parser.add_argument("--lines_after", metavar='', type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")       # noqa
     delete_parser.add_argument("--lines_before", metavar='', type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")      # noqa
-    delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")                    # noqa
+    delete_parser.add_argument("--include_line", action="store_true", help="Also delete the matching line. Defaults to False.")                    # noqa
     add_common_args_to_cli_subcommand(delete_parser)
 
     # Replace
