@@ -35,7 +35,7 @@ class BaseFXRTest(object):
 
     """ Base class for testing fxr. """
 
-    version = "0.2.2"
+    version = "0.2.3"
 
     @abc.abstractmethod
     def run_cli(self, args, filepath):
