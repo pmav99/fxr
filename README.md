@@ -12,6 +12,9 @@ and:
 
 In other words, you can consider it as a replacement for `ag`, `xargs` and `sed` (with a nicer API!)
 
+**Warning**: *`fxr` currently has no dry-run mode and changes files inplace (i.e. no backups!). Use
+at your own risk!*
+
 ## Installation
 
 All you need is Python `2.7+/3.3+` and a search program like
