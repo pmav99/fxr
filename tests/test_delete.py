@@ -15,10 +15,10 @@ import fxr
 import pytest
 
 
-from . import load_fixtures, TestFXR
+from . import load_fixtures, BaseFXRTest
 
 
-class TestFXRDelete(TestFXR):
+class TestFXRDelete(BaseFXRTest):
 
     """ Test `fxr delete`. """
 

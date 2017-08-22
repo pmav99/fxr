@@ -31,7 +31,7 @@ def assert_OK(temp_file, expected):
     assert temp_file.read() == expected, pprint.pformat(diff)
 
 
-class TestFXR(object):
+class BaseFXRTest(object):
 
     """ Base class for testing fxr. """
 

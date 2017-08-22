@@ -14,10 +14,10 @@ import fxr
 
 import pytest
 
-from . import TestFXR, load_fixtures
+from . import load_fixtures, BaseFXRTest
 
 
-class TestFXRAdd(TestFXR):
+class TestFXRAdd(BaseFXRTest):
 
     """ Test `fxr add`. """
 
