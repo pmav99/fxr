@@ -21,6 +21,8 @@ class TestFXRAdd(BaseFXRTest):
 
     """ Test `fxr add`. """
 
+    action = "add"
+
     def run_code(self, args, filepath):
         return fxr.add_text(args=args, filepath=filepath)
 

@@ -35,6 +35,8 @@ class BaseFXRTest(object):
 
     """ Base class for testing fxr. """
 
+    version = "0.2.1"
+
     @abc.abstractmethod
     def run_cli(self, args, filepath):
         raise NotImplementedError
@@ -61,3 +63,13 @@ class BaseFXRTest(object):
             self.run_code(args=args, filepath=temp_file)
         assert exc.typename == args["exception_type"]
         assert str(exc.value) == args["exception_text"]
+
+    def test_version(self):
+        # We need to capture stderr because argparse in Python < 3.4 prints
+        # version there
+        # https://bugs.python.org/issue18920
+        cmd = shlex.split("fxr %s --version" % self.action)
+        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+        out = out.decode('utf-8').strip()
+        expected = " ".join(item for item in ("fxr", self.action, self.version) if item)
+        assert out == expected, (out, expected)

@@ -22,6 +22,8 @@ class TestFXRDelete(BaseFXRTest):
 
     """ Test `fxr delete`. """
 
+    action = "delete"
+
     def run_code(self, args, filepath):
         return fxr.delete_text(args=args, filepath=filepath)
 

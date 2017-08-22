@@ -21,6 +21,8 @@ class TestFXRReplace(BaseFXRTest):
 
     """ Test `fxr replace`. """
 
+    action="replace"
+
     def run_code(self, args, filepath):
         return fxr.replace_text(args=args, filepath=filepath)
 

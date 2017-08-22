@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # module: fxr
-# version: 0.2.1
 # author: Panagiotis Mavrogiorgos - pmav99 google mail
 
 """
@@ -17,10 +16,13 @@ fxr replace 'search_pattern' 'replace' --single /path/to/file
 
 """
 
+
 from __future__ import division
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import unicode_literals
+
+__version__ = "0.2.1"
 
 import io
 import os
@@ -275,11 +277,13 @@ def add_common_args_to_cli_subcommand(parser):
     parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.", metavar='')                                             # noqa
     parser.add_argument("--search_prog", help="The executable that we want to use in order to search for matches. Defaults to 'ag'.", default="ag", metavar='')         # noqa
     parser.add_argument("--search_args", help="Arguments passed to the search executable (e.g. 'ag').", nargs=argparse.REMAINDER, default=('-s', '-l', '--hidden'))     # noqa
+    parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version=__version__))
 
 
-def cli():
+def get_parser():
     # Create the top-level parser and the subparsers
     main_parser = argparse.ArgumentParser(description="A pure python 'search & replace' script.")
+    main_parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version=__version__))
     subparsers = main_parser.add_subparsers(help='Choose mode of operation', dest='mode', title="subcommands")      # noqa
     add_parser = subparsers.add_parser("add", help="Append/prepend text to lines matching <pattern>.")              # noqa
     delete_parser = subparsers.add_parser("delete", help="Delete text before/after lines matching <pattern>.")      # noqa
@@ -303,11 +307,16 @@ def cli():
     replace_parser.add_argument("replacement", help="The text we want to use as a replacement.")
     add_common_args_to_cli_subcommand(replace_parser)
 
-    args = main_parser.parse_args()
+    return main_parser
+
+
+def cli():
+    parser = get_parser()
+    args = parser.parse_args()
     if args.mode:
         main(args)
     else:
-        main_parser.print_help()
+        parser.print_help()
         sys.exit(0)
 
 
