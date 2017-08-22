@@ -27,7 +27,7 @@ def load_fixtures(path, key):
 
 
 def assert_OK(temp_file, expected):
-    diff = difflib.unified_diff([l.strip() for l in temp_file.readlines()], expected.splitlines())
+    diff = list(difflib.unified_diff([l.strip() for l in temp_file.readlines()], expected.splitlines()))
     assert temp_file.read() == expected, pprint.pformat(diff)
 
 
