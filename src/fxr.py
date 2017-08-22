@@ -293,8 +293,8 @@ def cli():
 
     # Delete
     delete_parser.add_argument("pattern", help="The pattern we want to match.")
-    delete_parser.add_argument("--lines_after", type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")       # noqa
-    delete_parser.add_argument("--lines_before", type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")      # noqa
+    delete_parser.add_argument("--lines_after", metavar='', type=int, default=0, help="Nunmber lines to delete after the matched pattern. Defaults to 0")       # noqa
+    delete_parser.add_argument("--lines_before", metavar='', type=int, default=0, help="Number lines to delete before the matched pattern. Defaults to 0")      # noqa
     delete_parser.add_argument("--include_match", action="store_true", help="Also delete the matching line. Defaults to False.")                    # noqa
     add_common_args_to_cli_subcommand(delete_parser)
 
