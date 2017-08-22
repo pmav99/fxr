@@ -25,14 +25,11 @@ from __future__ import unicode_literals
 __version__ = "0.2.3"
 
 import io
-import os
 import re
 import sys
 import shutil
 import argparse
 import subprocess
-
-from contextlib import contextmanager
 
 
 def handle_no_match(args):
@@ -41,93 +38,6 @@ def handle_no_match(args):
         sys.exit(msg)
     else:
         print("Warning: %s" % msg)
-
-
-def get_last_line(filepath):
-    filepath = str(filepath)
-    if not os.stat(filepath).st_size:
-        # No reason to open empty files
-        last = b''
-    else:
-        with io.open(str(filepath), "rb") as fd:
-            fd.readline()      # Read the first line.
-            fd.seek(-2, 2)              # Jump to the second last byte.
-            while fd.read(1) != b"\n":  # Until EOL is found...
-                try:
-                    fd.seek(-2, 1)      # ...jump back the read byte plus one more.
-                except IOError:
-                    # the file has just a single line!
-                    fd.seek(0)
-                    break
-            last = fd.readline()        # Read last line.
-    return last.decode('utf-8')
-
-
-@contextmanager
-def inplace(filename, mode='r', buffering=-1, encoding=None, errors=None,
-            newline=None, backup_extension=None):
-    """Allow for a file to be replaced with new content.
-
-    yields a tuple of (readable, writable) file objects, where writable
-    replaces readable.
-
-    If an exception occurs, the old file is restored, removing the
-    written data.
-
-    mode should *not* use 'w', 'a' or '+'; only read-only-modes are supported.
-
-    http://www.zopatista.com/python/2013/11/26/inplace-file-rewriting/
-
-    """
-
-    # move existing file to backup, create new file with same permissions
-    # borrowed extensively from the fileinput module
-    if set(mode).intersection('wa+'):
-        raise ValueError('Only read-only file modes can be used')
-
-    filename = str(filename)
-    backupfilename = str(filename + (backup_extension or os.extsep + 'bak'))
-    try:
-        os.unlink(backupfilename)
-    except os.error:
-        pass
-    os.rename(filename, backupfilename)
-    readable = io.open(backupfilename, mode, buffering=buffering,
-                       encoding=encoding, errors=errors, newline=newline)
-    try:
-        perm = os.fstat(readable.fileno()).st_mode
-    except OSError:
-        writable = io.open(filename, 'w' + mode.replace('r', ''), buffering=buffering,
-                           encoding=encoding, errors=errors, newline=newline)
-    else:
-        os_mode = os.O_CREAT | os.O_WRONLY | os.O_TRUNC
-        if hasattr(os, 'O_BINARY'):
-            os_mode |= os.O_BINARY
-        fd = os.open(filename, os_mode, perm)
-        writable = io.open(fd, "w" + mode.replace('r', ''), buffering=buffering,
-                           encoding=encoding, errors=errors, newline=newline)
-        try:
-            if hasattr(os, 'chmod'):
-                os.chmod(filename, perm)
-        except OSError:
-            pass
-    try:
-        yield readable, writable
-    except Exception:
-        try:
-            os.unlink(filename)
-        except os.error:
-            pass
-        finally:
-            os.rename(backupfilename, filename)
-        raise
-    finally:
-        readable.close()
-        writable.close()
-        try:
-            os.unlink(backupfilename)
-        except os.error:
-            pass
 
 
 def literal_replace(pattern, replacement, original):
@@ -181,23 +91,22 @@ def add_text(args, filepath):
     # input validation
     if args.pattern == '' or args.added_text == '':
         sys.exit("In <add> mode, you must specify both <pattern> and <added_text>.")
-    added_text = args.added_text + "\n"
+    added_text = args.added_text
     prepend = args.prepend
     pattern = re.compile(args.pattern)
-    found = False
-    last_line = get_last_line(filepath)
-    with inplace(filepath, "r") as (infile, outfile):
-        for line in infile:
-            if pattern.search(line):
-                # line = line.encode("utf-8")
-                found = True
-                if not prepend and line == last_line:
-                    added_text = "\n" + args.added_text
-                lines = [added_text, line] if prepend else [line, added_text]
-                outfile.writelines(lines)
-            else:
-                outfile.write(line)
-    if not found:
+    with io.open(str(filepath), "rb") as fd:
+        original_text = fd.read().decode('utf-8')
+    original_lines = [line.strip() for line in original_text.splitlines()]
+    changed_lines = original_lines[:]
+    for n, line in enumerate(original_lines):
+        if pattern.search(line):
+            index = n if prepend else n + 1
+            changed_lines.insert(index, added_text)
+    output_text = "\n".join(changed_lines)
+    # write file inplace
+    with io.open(str(filepath), "wb") as fd:
+        fd.write(output_text.encode("utf-8"))
+    if original_text == output_text:
         handle_no_match(args)
 
 
