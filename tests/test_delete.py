@@ -27,12 +27,13 @@ class TestFXRDelete(BaseFXRTest):
     def run_code(self, args, filepath):
         return fxr.delete_text(args=args, filepath=filepath)
 
-    def run_cli(self, filepath, pattern, lines_before, lines_after, include_line, literal, **kwargs):
+    def run_cli(self, filepath, pattern, lines_before, lines_after, include_line, literal, backup, **kwargs):
+        backup = ("--backup %s" % backup) if backup else ''
         literal = '--literal' if literal else ''
         lines_before = '--lines_before %d' % lines_before if lines_before else ''
         lines_after = '--lines_after %d' % lines_after if lines_after else ''
         include_line = "--include_line" if include_line else ''
-        cmd = "fxr delete {literal} {lines_before} {lines_after} {include_line} --single {filepath} '{pattern}'"
+        cmd = "fxr delete {backup} {literal} {lines_before} {lines_after} {include_line} --single {filepath} '{pattern}'"
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 

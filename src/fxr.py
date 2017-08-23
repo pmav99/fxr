@@ -31,6 +31,8 @@ import shutil
 import argparse
 import subprocess
 
+from contextlib import contextmanager
+
 
 def handle_no_match(args):
     msg = "Couldn't find a match."
@@ -170,17 +172,41 @@ DISPATCHER = {
 }
 
 
+def get_backup_filename(filepath, backup):
+    return filepath + "." + backup
+
+
+@contextmanager
+def handle_backup(filepath, backup):
+    if not backup:
+        # do nothing!
+        yield
+    else:
+        # create backup file
+        backup_file = get_backup_filename(filepath, backup)
+        shutil.copy2(filepath, backup_file)
+        try:
+            yield
+        except Exception:
+            # Something went wrong, restore file
+            shutil.copy2(backup_file, filepath)
+            raise
+
+
 def main(args):
     run = DISPATCHER[args.mode]
     if args.single:
         filepaths = [str(args.single)]
     else:
         filepaths = search_for_files(args)
+    backup = args.backup
     for filepath in filepaths:
-        run(args, filepath)
+        with handle_backup(filepath, backup):
+            run(args, filepath)
 
 
 def add_common_args_to_cli_subcommand(parser):
+    parser.add_argument("--backup", type=str, default=None, metavar='', help="If provided, it is going to be used as a prefix for backup files.")                                 # noqa
     parser.add_argument("--literal", action="store_true", default=False, help="Search literally for <pattern>, i.e. don't treat <pattern> as a regex.")                 # noqa
     parser.add_argument("--raise_if_no_change", action="store_true", help="Raise an exception if the file has remained unchanged.")                                     # noqa
     parser.add_argument("--single", action="store", default=False, help="Add text only to the specified file.", metavar='')                                             # noqa

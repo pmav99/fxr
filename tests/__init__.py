@@ -31,6 +31,13 @@ def assert_OK(temp_file, expected):
     assert temp_file.read() == expected, pprint.pformat(diff)
 
 
+def check_backup(temp_file, args):
+    if args["backup"]:
+        backup_filename = fxr.get_backup_filename(temp_file, args["backup"])
+        assert backup_filename.exists(), backup_filename
+        assert_OK(backup_filename, args["original"])
+
+
 class BaseFXRTest(object):
 
     """ Base class for testing fxr. """
@@ -49,12 +56,15 @@ class BaseFXRTest(object):
         temp_file.write(args["original"])
         self.run_cli(temp_file, **args)
         assert_OK(temp_file, args["expected"])
+        check_backup(temp_file, args)
+
 
     def _test_run_valid_code(self, temp_file, args):
         args = Munch(**args)
         temp_file.write(args["original"])
         self.run_code(args=args, filepath=temp_file)
         assert_OK(temp_file, args["expected"])
+        # check_backup(temp_file, args)
 
     def _test_run_exceptions(self, temp_file, args):
         args = Munch(**args)
@@ -73,3 +83,4 @@ class BaseFXRTest(object):
         out = out.decode('utf-8').strip()
         expected = " ".join(item for item in ("fxr", self.action, self.version) if item)
         assert out == expected, (out, expected)
+

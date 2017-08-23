@@ -12,8 +12,8 @@ and:
 
 In other words, you can consider it as a replacement for `ag`, `xargs` and `sed` (with a nicer API!)
 
-**Warning**: *`fxr` currently has no dry-run mode and changes files inplace (i.e. no backups!). Use
-at your own risk!*
+**Warning**: *`fxr` currently has no dry-run mode and by default changes files inplace. If you want
+backups, you need to explicitly enable them!
 
 ## Installation
 
@@ -78,6 +78,8 @@ fxr replace <pattern> <replacement>
 
 All the above subcommands share the following flags/arguments:
 
+* `--backup`: The provided value is used as a prefix for the backup files. If it is not provided,
+  the changes are being done in-place.
 * `--literal`: When you set this flag, the pattern will not be parsed as a regex.
 * `--raise-if-no-change`: When you set this flag, an exception will be raised if there were no
   changes in the file.

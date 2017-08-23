@@ -26,10 +26,11 @@ class TestFXRAdd(BaseFXRTest):
     def run_code(self, args, filepath):
         return fxr.add_text(args=args, filepath=filepath)
 
-    def run_cli(self, filepath, pattern, added_text, prepend, literal, **kwargs):
+    def run_cli(self, filepath, pattern, added_text, prepend, literal, backup, **kwargs):
+        backup = ("--backup %s" % backup) if backup else ''
         literal = '--literal' if literal else ''
         prepend = "--prepend" if prepend else ''
-        cmd = "fxr add {literal} {prepend} --single {filepath} '{pattern}' '{added_text}'"
+        cmd = "fxr add {backup} {literal} {prepend} --single {filepath} '{pattern}' '{added_text}'"
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 

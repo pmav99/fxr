@@ -26,9 +26,10 @@ class TestFXRReplace(BaseFXRTest):
     def run_code(self, args, filepath):
         return fxr.replace_text(args=args, filepath=filepath)
 
-    def run_cli(self, filepath, pattern, replacement, literal, **kwargs):
+    def run_cli(self, filepath, pattern, replacement, literal, backup, **kwargs):
+        backup = ("--backup %s" % backup) if backup else ''
         literal = '--literal' if literal else ''
-        cmd = "fxr replace {literal} --single {filepath} '{pattern}' '{replacement}'"
+        cmd = "fxr replace {backup} {literal} --single {filepath} '{pattern}' '{replacement}'"
         cmd = shlex.split(cmd.format(**locals()))
         subprocess.check_call(cmd)
 

@@ -1,13 +1,22 @@
 {
   "testcases": [
-    "Replace pattern on single line",
-    "Replace pattern on multiple lines",
     "Replace pattern which spans multiple lines; This could be composed of several calls",
     "Replace multiple matches on a single line."
   ],
   "valid": [
     {
+      "description": "Backup",
+      "backup": "bak",
+      "literal": true,
+      "raise_if_no_change": true,
+      "pattern": "middle",
+      "replacement": "MIDDLE",
+      "original": "first line\nmiddle line\nlast line",
+      "expected": "first line\nMIDDLE line\nlast line"
+    },
+    {
       "description": "Replace literal pattern on single line.",
+      "backup": false,
       "literal": true,
       "raise_if_no_change": true,
       "pattern": "middle",
@@ -17,6 +26,7 @@
     },
     {
       "description": "Replace literal pattern on single line 2.",
+      "backup": false,
       "literal": true,
       "raise_if_no_change": true,
       "pattern": "(mid)",
@@ -26,6 +36,7 @@
     },
     {
       "description": "Replace regex pattern on single line 1.",
+      "backup": false,
       "literal": false,
       "raise_if_no_change": true,
       "pattern": "(mid)",
@@ -35,6 +46,7 @@
     },
     {
       "description": "Replace regex pattern on multiple lines.",
+      "backup": false,
       "literal": false,
       "raise_if_no_change": true,
       "pattern": "(mi\\d{2}le)",
@@ -46,6 +58,7 @@
   "exceptions": [
     {
       "description": "Empty pattern",
+      "backup": false,
       "literal": true,
       "raise_if_no_change": true,
       "pattern": "",
@@ -56,6 +69,7 @@
     },
     {
       "description": "Empty replacement",
+      "backup": false,
       "literal": true,
       "raise_if_no_change": true,
       "pattern": "pattern",
@@ -66,6 +80,7 @@
     },
     {
       "description": "No match",
+      "backup": false,
       "literal": true,
       "raise_if_no_change": true,
       "pattern": "pattern",

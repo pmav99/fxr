@@ -1,8 +1,20 @@
 {
   "valid": [
     {
+      "description": "Backup",
+      "raise_if_no_change": true,
+      "backup": "bak",
+      "literal": true,
+      "pattern": "First",
+      "prepend": false,
+      "added_text": "NEW LINE",
+      "original": "First Line A\nSecond Line B\nThird Line C",
+      "expected": "First Line A\nNEW LINE\nSecond Line B\nThird Line C"
+    },
+    {
       "description": "Append at the start of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "First",
       "prepend": false,
@@ -13,6 +25,7 @@
     {
       "description": "Prepend at the start of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "First",
       "prepend": true,
@@ -23,6 +36,7 @@
     {
       "description": "Append at the middle of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "Second",
       "prepend": false,
@@ -33,6 +47,7 @@
     {
       "description": "Prepend at the middle of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "Second",
       "prepend": true,
@@ -43,6 +58,7 @@
     {
       "description": "Append at the end of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "Third",
       "prepend": false,
@@ -53,6 +69,7 @@
     {
       "description": "Prepend at the end of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "Third",
       "prepend": true,
@@ -63,6 +80,7 @@
     {
       "description": "Prepend multiple lines at the start of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "First",
       "prepend": true,
@@ -73,6 +91,7 @@
     {
       "description": "Append multiple lines at the end of the file",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "Third",
       "prepend": false,
@@ -85,6 +104,7 @@
     {
       "description": "Empty pattern",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "",
       "prepend": true,
@@ -96,6 +116,7 @@
     {
       "description": "Empty added_text",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "pattern": "pattern",
       "prepend": true,
@@ -110,6 +131,7 @@
       "prepend": true,
       "added_text": "added",
       "raise_if_no_change": true,
+      "backup": false,
       "literal": true,
       "original": "just some text",
       "exception_type": "SystemExit",
