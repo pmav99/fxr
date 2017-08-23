@@ -93,7 +93,7 @@ All the above subcommands share the following flags/arguments:
 There were two compelling arguments that made me write this:
 
 1. `sed` regex engine is quite limited. E.g. there is no support for look-aheads and other more
-   advanced features
+   advanced features, which you don't really need, until you need them!
    ([link](https://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)).
 
 2. The API for combining `ag`, `sed` and `xargs` is clunky at best (e.g. repeating `<pattern>` both
