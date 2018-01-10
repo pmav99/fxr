@@ -138,7 +138,7 @@ def delete_text(args, filepath):
     include_line = args.include_line
     # open file
     with io.open(str(filepath), "rb") as fd:
-        original_lines = [line.strip() for line in fd.readlines()]
+        original_lines = [line.rstrip(b"\r\n") for line in fd.readlines()]
     no_lines = len(original_lines)
     # delete lines
     match_method = literal_match if args.literal else regex_match
@@ -156,6 +156,7 @@ def delete_text(args, filepath):
     indices_to_be_deleted = {item for item in indices_to_be_deleted if (item >= 0 and item <= no_lines)}
     # Discard lines to be removed.
     lines_to_be_kept = list(compress(original_lines, indices_to_be_deleted))
+    print(lines_to_be_kept)
     if len(lines_to_be_kept) == no_lines:
         handle_no_match(args)
     else:
