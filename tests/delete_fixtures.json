@@ -184,7 +184,21 @@
       "pattern": "matched",
       "original": "first line\nsecond line\nmatched line",
       "expected": "first line\nsecond line\nmatched line"
+    },
+
+    {
+      "description": "Delete lines while preserving whitespace.",
+      "lines_after": 0,
+      "lines_before": 0,
+      "include_line": true,
+      "raise_if_no_change": false,
+      "backup": false,
+      "literal": true,
+      "pattern": "matched",
+      "original": "    first line    \n    second line\n     matched line    ",
+      "expected": "    first line    \n    second line"
     }
+
   ],
   "exceptions": [
     {
