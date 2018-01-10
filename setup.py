@@ -18,7 +18,7 @@ test_requirements = [
 
 setup(
     name='fxr',
-    version='0.2.4',
+    version='0.2.5',
     description="Pythonic Find and Replacetest",
     long_description=readme,
     author="Panos Mavrogiorgos",
