@@ -156,7 +156,6 @@ def delete_text(args, filepath):
     indices_to_be_deleted = {item for item in indices_to_be_deleted if (item >= 0 and item <= no_lines)}
     # Discard lines to be removed.
     lines_to_be_kept = list(compress(original_lines, indices_to_be_deleted))
-    print(lines_to_be_kept)
     if len(lines_to_be_kept) == no_lines:
         handle_no_match(args)
     else:
