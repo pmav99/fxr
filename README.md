@@ -25,7 +25,7 @@ pip install -U fxr
 pip install --user -U fxr           # this will install fxr on ~/.local/
 ```
 
-The latest version is `0.2.3`:
+The latest version is `0.2.4`:
 
 ## Modes of operation
 
