@@ -29,10 +29,8 @@ python = "^3.7"
 pytest = "^4.0"
 munch = "^2.3"
 bump2version = "^0.5.10"
-"ruamel.yaml" = "^0.15.89"
 pre-commit = "^1.15"
 pre-commit-hooks = "^2.1"
-detect-secrets = "^0.12.2"
 black = {version = "^18.3-alpha.0",allows-prereleases = true}
 
 [tool.poetry.scripts]
