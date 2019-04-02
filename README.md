@@ -17,15 +17,30 @@ backups, you need to explicitly enable them!
 
 ## Installation
 
-All you need is Python `2.7+/3.3+` and a search program like
+### Prerequisites
+
+All you need is Python `3.6+` and a search program like
 [`ag`](https://github.com/ggreer/the_silver_searcher):
 
+### `pipx`
+
+The recommended installation method is [pipx](https://github.com/cs01/pipx).  More
+specifically, you can install `fxr` for your user with:
+
 ```
-pip install -U fxr
-pip install --user -U fxr           # this will install fxr on ~/.local/
+pipx install fxr
 ```
 
-The latest version is `0.2.5`:
+The above command will create a virtual environment in `~/.local/pipx/venvs/fxr`
+and add the `fxr` script in `~/.local/bin`.
+
+#### `pip`
+
+Alternatively you can use good old `pip` but this is more fragile than `pipx`.
+
+``` bash
+pip install --user fxr
+```
 
 ## Modes of operation
 
@@ -112,4 +127,3 @@ is to make changes to source code and configuration files; not a multi-GB CSV fi
 ### Search programs
 
 If you wish to use a different program than `ag` you can do so by using the appropriate `CLI` argument.
-
